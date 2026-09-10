@@ -22,7 +22,7 @@ The implementation is migrated from the AFLOW reference extractors in the reposi
 - Extraction status JSON and database extraction logs
 - Retry and resume behavior in batch extraction
 
-AFLOW uses AURLs and AUIDs rather than Materials Project material IDs. Its file-oriented storage therefore remains source-specific instead of following the MP route layout.
+AFLOW uses AURLs and AUIDs rather than Materials Project material IDs. Raw files remain source-specific, while normalized/<aflow-id>/record.json follows the shared DFT schema and contains null for fields unavailable from the selected AFLOW entry.
 
 ## 🧬 AFLOW Fields
 
@@ -62,9 +62,9 @@ data/dft/aflow/
 └── manifests/
 ```
 
-AFLOW's original filenames are preserved because they identify the calculation artifacts and file formats. The SQLite database is stored in `database/aflow.sqlite`, matching the Materials Project layout. Runtime logs are stored in `logs/`, and status/manifests are stored in `manifests/`.
+AFLOW's original filenames are preserved because they identify the calculation artifacts and file formats. Files ending in .xz use the XZ compression format; after a successful download the crawler decompresses them in place, removes the .xz file, and keeps the uncompressed filename in raw/. If decompression fails, the compressed file is retained and the error is recorded. The SQLite database is stored in database/aflow.sqlite, matching the Materials Project layout. Runtime logs are stored in logs/, and status/manifests are stored in manifests/.
 
-'## 🧩 Module Layout
+## 🧩 Module Layout
 
 - `config.py`: AFLOW data paths and HTTP settings.
 - `client.py`: AFLOWLIB metadata and AFLUX HTTP access.
@@ -73,7 +73,7 @@ AFLOW's original filenames are preserved because they identify the calculation a
 - `extractor.py`: Single-material extraction orchestration and compatibility helpers.
 - `crawler/dft/aflow/`: Single and batch command-line runners.
 
-'## ▶️ Usage
+## ▶️ Usage
 
 Single entry:
 

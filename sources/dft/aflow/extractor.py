@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import fnmatch
 import json
+import lzma
 import os
 import sqlite3
 import tempfile
@@ -196,6 +197,46 @@ def file_size_str(path: Path) -> str:
     if size < 1024 * 1024:
         return f"{size / 1024:.1f} KB"
     return f"{size / (1024 * 1024):.2f} MB"
+
+
+def materialize_xz_files(
+    paths: list[Path],
+    errors: list[str] | None = None,
+) -> list[Path]:
+    """Decompress downloaded XZ files and remove the compressed originals.
+
+    Args:
+        paths (list[Path]): Downloaded local files.
+        errors (list[str] | None): Mutable list receiving decompression errors.
+
+    Returns:
+        list[Path]: Paths after conversion; successful XZ files are replaced
+            by their uncompressed paths.
+    """
+    materialized: list[Path] = []
+    for path in paths:
+        if path.suffix.lower() != ".xz":
+            materialized.append(path)
+            continue
+        target = path.with_suffix("")
+        temporary = target.with_name(f".{target.name}.tmp")
+        try:
+            with lzma.open(path, "rb") as source, temporary.open("wb") as destination:
+                while True:
+                    chunk = source.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    destination.write(chunk)
+            os.replace(temporary, target)
+            path.unlink()
+            materialized.append(target)
+        except (OSError, lzma.LZMAError) as exc:
+            if temporary.exists():
+                temporary.unlink()
+            if errors is not None:
+                errors.append(f"Failed to decompress {path}: {exc}")
+            materialized.append(path)
+    return materialized
 
 
 # ---------------------------------------------------------------------------
@@ -788,6 +829,7 @@ def extract_single(
             time.sleep(sleep_seconds)
 
         downloaded = storage.download_files(item, profile, timeout, file_patterns, report.errors)
+        downloaded = materialize_xz_files(downloaded, report.errors)
 
         downloaded_for_db = saved_metadata + category_json_paths + downloaded
         mapping_item = dict(item)

@@ -1,146 +1,214 @@
-# Standard DFT Fields
+# DFT Standard Schema
 
-This directory defines PsiCrawler's unified DFT (Density Functional Theory) data contract. The current standard version is `dft-v1`, with 51 fields. `standard.yaml` is the authoritative field definition, `catalog.yaml` stores the field catalog, and each source-specific `*.yaml` file defines source mappings.
+This document groups the standard DFT record into practical categories. The machine-readable definition is [standard.yaml](./standard.yaml).
 
-All fields are currently optional and nullable. Use `null` when a source does not provide a value, the value has not been fetched, or the property is not applicable. Do not use `0`, an empty string, or `false` to represent missing data. `false` means the negative value is known; `0` means the numeric value is known to be zero. Path fields refer to local files and should not be assumed to be remote URLs.
+## Source and Record Metadata
 
-## Field Groups
-
-| Group | Count | Fields |
-| --- | ---: | --- |
-| Source and record metadata | 4 | `source`, `source_id`, `schema_version`, `ingested_at` |
-| Chemical composition | 4 | `formula`, `formula_pretty`, `elements`, `composition` |
-| Structure and crystallography | 6 | `nsites`, `volume`, `density`, `symmetry_symbol`, `symmetry_number`, `crystal_system` |
-| Energy and stability | 5 | `energy`, `energy_per_atom`, `formation_energy_per_atom`, `energy_above_hull`, `is_stable` |
-| Electronic structure | 3 | `band_gap`, `is_metal`, `efermi` |
-| Magnetism | 4 | `total_magnetization`, `magnetic_ordering`, `is_magnetic`, `magnetic_moment` |
-| Elastic and mechanical properties | 12 | `volume_change`, `bulk_modulus`, `shear_modulus`, `elastic_anisotropy`, `homogeneous_poisson`, `g_reuss`, `g_voigt`, `k_reuss`, `k_voigt`, `universal_anisotropy`, `elastic_tensor`, `has_elasticity` |
-| Electronic and phonon files | 10 | `dos_path`, `bandstructure_path`, `charge_density_path`, `phonon_bandstructure_path`, `phonon_dos_path`, `phonon_modes_path`, `has_dos`, `has_bandstructure`, `has_charge_density`, `has_phonon` |
-| Structure and calculation output files | 3 | `cif_path`, `poscar_path`, `output_dir` |
-| **Total** | **51** | |
-
-## 1. Source and Record Metadata
-
-| Field | Type | Unit / format | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `source` | string | enum | Data source: `mp`, `oqmd`, `aflow`, `citrine`, `jarvis`, or `other`. |
-| `source_id` | string | source-local ID | Material or calculation record ID in the source, such as `mp-149`; not guaranteed to be globally unique. |
-| `schema_version` | string | version | Standard version followed by the record; currently `dft-v1`. |
-| `ingested_at` | string | ISO 8601 | Time when the record entered the normalization pipeline, normally in UTC. |
+| source | string | - | Name of the upstream data source. |
+| requested_id | string | - | Identifier supplied to the crawler by the user. |
+| source_id | string | - | Stable identifier assigned by the upstream source. |
+| source_url | string | - | Source-reported source url; use it with the other fields in this category. |
+| calculation_method | string | - | Source-reported calculation method; use it with the other fields in this category. |
+| calculation_type | string | - | Source-reported calculation type; use it with the other fields in this category. |
+| code | string | - | Source-reported code; use it with the other fields in this category. |
+| code_version | string | - | Source-reported code version; use it with the other fields in this category. |
+| retrieved_at | string | - | Source-reported retrieved at; use it with the other fields in this category. |
+| schema_version | string | - | Source-reported schema version; use it with the other fields in this category. |
+| api_version | string | - | Source-reported api version; use it with the other fields in this category. |
+| license | string | object | Source-reported license; use it with the other fields in this category. |
+| citation | string | object | Source-reported citation; use it with the other fields in this category. |
 
-## 2. Chemical Composition
+## Composition and Identity
 
-| Field | Type | Unit / format | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `formula` | string | chemical formula | Original formula string supplied by the source, preserving source representation where possible. |
-| `formula_pretty` | string | chemical formula | Normalized or display-friendly formula for presentation and search. |
-| `elements` | array[string] | element symbols | Unique elements in the structure, for example [`Si`, `O`]. |
-| `composition` | object | element-to-amount map | Composition mapping, for example `{"Si": 1, "O": 2}`; amounts may be integer counts or normalized ratios. |
+| formula | string | - | Chemical formula reported for the material. |
+| formula_reduced | string | - | Source-reported formula reduced; use it with the other fields in this category. |
+| chemical_system | string | - | Source-reported chemical system; use it with the other fields in this category. |
+| elements | list[string] | list | Source-reported elements; use it with the other fields in this category. |
+| composition | object | object | Source-reported composition; use it with the other fields in this category. |
+| element_count | integer | - | Source-reported element count; use it with the other fields in this category. |
+| formula_anonymous | string | - | Source-reported formula anonymous; use it with the other fields in this category. |
+| composition_reduced | object | - | Source-reported composition reduced; use it with the other fields in this category. |
+| possible_species | array | list | Source-reported possible species; use it with the other fields in this category. |
 
-## 3. Structure and Crystallography
+## Structure and Crystallography
 
-| Field | Type | Unit / range | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `nsites` | integer | count | Number of atoms in the calculated unit cell; not the number of element species. |
-| `volume` | number | Å³ | Calculated unit-cell volume. |
-| `density` | number | g/cm³ | Material density, normally derived from unit-cell mass and volume. |
-| `symmetry_symbol` | string | Hermann-Mauguin | Space-group symbol, such as `Fd-3m`. |
-| `symmetry_number` | integer | 1–230 | International space-group number. |
-| `crystal_system` | string | enum | `cubic`, `tetragonal`, `orthorhombic`, `hexagonal`, `trigonal`, `monoclinic`, `triclinic`, or `other`. |
+| structure | object | object | Parsed crystal structure object when available. |
+| structure_path | string | path | Path to the canonical structure file. |
+| structure_json_path | string | path | Path to the serialized structure JSON. |
+| structure_format | list[string] | - | Source-reported structure format; use it with the other fields in this category. |
+| lattice_matrix | array | angstrom | Source-reported lattice matrix; use it with the other fields in this category. |
+| lattice_a | float | angstrom | Source-reported lattice a; use it with the other fields in this category. |
+| lattice_b | float | angstrom | Source-reported lattice b; use it with the other fields in this category. |
+| lattice_c | float | angstrom | Source-reported lattice c; use it with the other fields in this category. |
+| angle_alpha | float | degree | Source-reported angle alpha; use it with the other fields in this category. |
+| angle_beta | float | degree | Source-reported angle beta; use it with the other fields in this category. |
+| angle_gamma | float | degree | Source-reported angle gamma; use it with the other fields in this category. |
+| volume | float | varies | Source-reported volume; use it with the other fields in this category. |
+| density | float | varies | Source-reported density; use it with the other fields in this category. |
+| crystal_system | string | - | Source-reported crystal system; use it with the other fields in this category. |
+| spacegroup_number | integer | - | Source-reported spacegroup number; use it with the other fields in this category. |
+| spacegroup_symbol | string | - | Source-reported spacegroup symbol; use it with the other fields in this category. |
+| point_group | string | - | Source-reported point group; use it with the other fields in this category. |
+| symmetry_precision | float | - | Source-reported symmetry precision; use it with the other fields in this category. |
+| symmetry_tolerance | float | - | Source-reported symmetry tolerance; use it with the other fields in this category. |
+| density_atomic | float | varies | Source-reported density atomic; use it with the other fields in this category. |
 
-## 4. Energy and Stability
+## Calculation Settings
 
-| Field | Type | Unit / range | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `energy` | number | eV / cell | Total energy of the calculated system; compare across materials only after checking cell-size consistency. |
-| `energy_per_atom` | number | eV/atom | Total energy divided by the number of atoms in the unit cell. |
-| `formation_energy_per_atom` | number | eV/atom | Formation energy per atom relative to elemental reference states; references vary by source. |
-| `energy_above_hull` | number | eV/atom | Energy relative to the convex hull of the same chemical system; values closer to 0 are generally more stable. |
-| `is_stable` | boolean | true / false | Stability judgment supplied by the source; preserve the source's threshold semantics. |
+| functional | string | - | Source-reported functional; use it with the other fields in this category. |
+| exchange_correlation | string | - | Source-reported exchange correlation; use it with the other fields in this category. |
+| pseudopotential | string | - | Source-reported pseudopotential; use it with the other fields in this category. |
+| basis_set | string | - | Source-reported basis set; use it with the other fields in this category. |
+| kpoint_mesh | array | - | Source-reported kpoint mesh; use it with the other fields in this category. |
+| energy_cutoff | float | varies | Source-reported energy cutoff; use it with the other fields in this category. |
+| smearing | string | - | Source-reported smearing; use it with the other fields in this category. |
+| spin_polarized | boolean | - | Source-reported spin polarized; use it with the other fields in this category. |
+| spin_orbit_coupling | boolean | - | Source-reported spin orbit coupling; use it with the other fields in this category. |
+| hubbard_u | boolean | - | Source-reported hubbard u; use it with the other fields in this category. |
+| u_values | object | - | Source-reported u values; use it with the other fields in this category. |
+| theoretical | boolean | - | Source-reported theoretical; use it with the other fields in this category. |
+| temperature | float | varies | Source-reported temperature; use it with the other fields in this category. |
+| pressure | float | varies | Source-reported pressure; use it with the other fields in this category. |
+| shape_factor | float | - | Source-reported shape factor; use it with the other fields in this category. |
+| origins | array | object | Source-reported origins; use it with the other fields in this category. |
+| builder_meta | array | object | Source-reported builder meta; use it with the other fields in this category. |
 
-## 5. Electronic Structure
+## Energy and Stability
 
-| Field | Type | Unit / range | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `band_gap` | number | eV | Band gap. Metals commonly have 0 or a near-zero value, but the source classification should be preserved. |
-| `is_metal` | boolean | true / false | Whether the material is metallic; do not infer false from a missing band-gap value. |
-| `efermi` | number | eV | Fermi level. Source inputs may call this `efermi` or `fermi_level`; the normalized name is always `efermi`. |
+| relaxation_status | string | - | Source-reported relaxation status; use it with the other fields in this category. |
+| total_energy | float | varies | Source-reported total energy; use it with the other fields in this category. |
+| uncorrected_energy | float | varies | Source-reported uncorrected energy; use it with the other fields in this category. |
+| energy_per_atom | float | varies | Source-reported energy per atom; use it with the other fields in this category. |
+| formation_energy | float | varies | Source-reported formation energy; use it with the other fields in this category. |
+| formation_energy_per_atom | float | varies | Source-reported formation energy per atom; use it with the other fields in this category. |
+| energy_above_hull | float | varies | Source-reported energy above hull; use it with the other fields in this category. |
+| decomposition_energy | float | varies | Source-reported decomposition energy; use it with the other fields in this category. |
+| equilibrium_reaction_energy | float | varies | Source-reported equilibrium reaction energy; use it with the other fields in this category. |
+| is_stable | boolean | - | Source-reported is stable; use it with the other fields in this category. |
+| deprecated | boolean | - | Source-reported deprecated; use it with the other fields in this category. |
+| download_status | string | - | Source-reported download status; use it with the other fields in this category. |
+| decomposes_to | object | list | Source-reported decomposes to; use it with the other fields in this category. |
+| deprecation_reasons | array | object | Source-reported deprecation reasons; use it with the other fields in this category. |
+| uncorrected_energy_per_atom | float | varies | Source-reported uncorrected energy per atom; use it with the other fields in this category. |
 
-## 6. Magnetism
+## Electronic Structure
 
-| Field | Type | Unit / range | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `total_magnetization` | number | μB / cell | Total cell magnetization or magnetic moment; the exact definition follows the source. |
-| `magnetic_ordering` | string | enum | `NM`, `FM`, `AFM`, `FiM`, or `unknown`. |
-| `is_magnetic` | boolean | true / false | Whether magnetism is present; do not fill false automatically when total magnetization is missing. |
-| `magnetic_moment` | number | μB | Source-provided magnetic-moment summary; it may be per atom, per ion, or per structure and must be interpreted with source metadata. |
+| band_gap | float | varies | Source-reported band gap; use it with the other fields in this category. |
+| band_gap_type | string | varies | Source-reported band gap type; use it with the other fields in this category. |
+| is_metal | boolean | - | Source-reported is metal; use it with the other fields in this category. |
+| is_gap_direct | boolean | varies | Source-reported is gap direct; use it with the other fields in this category. |
+| cbm | float | varies | Source-reported cbm; use it with the other fields in this category. |
+| vbm | float | varies | Source-reported vbm; use it with the other fields in this category. |
+| fermi_level | float | varies | Source-reported fermi level; use it with the other fields in this category. |
+| band_structure_path | string | path | Path to the downloaded band-structure artifact. |
+| dos_path | string | path | Path to the downloaded density-of-states artifact. |
+| refractive_index | float | - | Source-reported refractive index; use it with the other fields in this category. |
+| bandstructure_summary | object | object | Source-reported bandstructure summary; use it with the other fields in this category. |
+| dos_summary | object | object | Source-reported dos summary; use it with the other fields in this category. |
+| dos_energy_up | array | varies | Source-reported dos energy up; use it with the other fields in this category. |
+| dos_energy_down | array | varies | Source-reported dos energy down; use it with the other fields in this category. |
 
-## 7. Elastic and Mechanical Properties
+## Magnetism
 
-Elastic fields primarily use GPa. Dimensionless fields have no unit. `bulk_modulus` and `shear_modulus` use Voigt-Reuss-Hill (VRH) averages.
-
-| Field | Type | Unit / range | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `volume_change` | number | % | Volume change from an elastic or structural calculation. |
-| `bulk_modulus` | number | GPa | VRH bulk modulus, describing resistance to uniform compression. |
-| `shear_modulus` | number | GPa | VRH shear modulus, describing resistance to shear deformation. |
-| `elastic_anisotropy` | number | dimensionless | Elastic-anisotropy summary value; exact definition follows the source. |
-| `homogeneous_poisson` | number | dimensionless | Homogeneous Poisson ratio. |
-| `g_reuss` | number | GPa | Reuss average of the shear modulus. |
-| `g_voigt` | number | GPa | Voigt average of the shear modulus. |
-| `k_reuss` | number | GPa | Reuss average of the bulk modulus. |
-| `k_voigt` | number | GPa | Voigt average of the bulk modulus. |
-| `universal_anisotropy` | number | dimensionless | Universal Elastic Anisotropy Index; it is commonly 0 for an isotropic material. |
-| `elastic_tensor` | object | usually GPa | Elastic stiffness tensor or source-native structure, such as an object containing `C11`; internal keys are not fixed by the standard layer. |
-| `has_elasticity` | boolean | true / false | Whether usable elastic data exists, normally determined by successful retrieval of a tensor or elastic-constant file. |
+| magnetic_ordering | string | - | Source-reported magnetic ordering; use it with the other fields in this category. |
+| total_magnetization | float | - | Source-reported total magnetization; use it with the other fields in this category. |
+| magnetization_per_atom | float | - | Source-reported magnetization per atom; use it with the other fields in this category. |
+| magnetic_site_count | integer | - | Source-reported magnetic site count; use it with the other fields in this category. |
+| magnetic_moments | array | - | Source-reported magnetic moments; use it with the other fields in this category. |
+| is_magnetic | boolean | - | Source-reported is magnetic; use it with the other fields in this category. |
+| num_unique_magnetic_sites | integer | - | Source-reported num unique magnetic sites; use it with the other fields in this category. |
+| types_of_magnetic_species | array | list | Source-reported types of magnetic species; use it with the other fields in this category. |
 
-## 8. Electronic and Phonon Data Files
+## Elastic and Mechanical
 
-These fields point to downloaded or generated local artifacts. Use `null` when a path does not exist, has not been downloaded, or the source has no corresponding calculation. The `has_*` fields provide quick availability flags.
-
-| Field | Type | Unit / format | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `dos_path` | string | local path | Total density-of-states (DOS) data file. |
-| `bandstructure_path` | string | local path | Electronic band-structure data file. |
-| `charge_density_path` | string | local path | Charge-density data file. |
-| `phonon_bandstructure_path` | string | local path | Phonon band-structure data file. |
-| `phonon_dos_path` | string | local path | Phonon density-of-states data file. |
-| `phonon_modes_path` | string | local path | Phonon-mode, displacement, or mode-resolved data file. |
-| `has_dos` | boolean | true / false | Whether usable DOS data exists. |
-| `has_bandstructure` | boolean | true / false | Whether usable electronic band-structure data exists. |
-| `has_charge_density` | boolean | true / false | Whether usable charge-density data exists. |
-| `has_phonon` | boolean | true / false | Whether any phonon data exists, normally based on the presence of any phonon artifact. |
+| bulk_modulus_voigt | float | varies | Source-reported bulk modulus voigt; use it with the other fields in this category. |
+| bulk_modulus_reuss | float | varies | Source-reported bulk modulus reuss; use it with the other fields in this category. |
+| bulk_modulus_vrh | float | varies | Source-reported bulk modulus vrh; use it with the other fields in this category. |
+| shear_modulus_voigt | float | varies | Source-reported shear modulus voigt; use it with the other fields in this category. |
+| shear_modulus_reuss | float | varies | Source-reported shear modulus reuss; use it with the other fields in this category. |
+| shear_modulus_vrh | float | varies | Source-reported shear modulus vrh; use it with the other fields in this category. |
+| youngs_modulus | float | varies | Source-reported youngs modulus; use it with the other fields in this category. |
+| poisson_ratio | float | varies | Source-reported poisson ratio; use it with the other fields in this category. |
+| elastic_anisotropy | float | - | Source-reported elastic anisotropy; use it with the other fields in this category. |
+| elastic_tensor | array | - | Source-reported elastic tensor; use it with the other fields in this category. |
+| elastic_tensor_path | string | path | Path to the downloaded elastic-tensor artifact. |
 
-## 9. Structure and Calculation Output Files
+## Dielectric, Piezoelectric and Surface
 
-| Field | Type | Unit / format | Description |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| `cif_path` | string | local path | CIF structure-file path. |
-| `poscar_path` | string | local path | VASP POSCAR/CONTCAR-style structure-file path. |
-| `output_dir` | string | local directory path | Directory containing raw outputs for the material or calculation record. |
+| dielectric_total | float | - | Source-reported dielectric total; use it with the other fields in this category. |
+| dielectric_ionic | float | - | Source-reported dielectric ionic; use it with the other fields in this category. |
+| dielectric_electronic | float | - | Source-reported dielectric electronic; use it with the other fields in this category. |
+| dielectric_tensor | array | - | Source-reported dielectric tensor; use it with the other fields in this category. |
+| piezoelectric_modulus | float | varies | Source-reported piezoelectric modulus; use it with the other fields in this category. |
+| piezoelectric_tensor | array | - | Source-reported piezoelectric tensor; use it with the other fields in this category. |
+| weighted_surface_energy | float | varies | Source-reported weighted surface energy; use it with the other fields in this category. |
+| surface_energy | float | varies | Source-reported surface energy; use it with the other fields in this category. |
+| surface_anisotropy | float | - | Source-reported surface anisotropy; use it with the other fields in this category. |
+| weighted_work_function | float | varies | Source-reported weighted work function; use it with the other fields in this category. |
+| work_function | float | varies | Source-reported work function; use it with the other fields in this category. |
+| grain_boundaries | object | - | Source-reported grain boundaries; use it with the other fields in this category. |
+| weighted_surface_energy_ev_per_ang2 | float | varies | Source-reported weighted surface energy ev per ang2; use it with the other fields in this category. |
 
-## Source Mapping
+## Phonon and Thermal
 
-| Source | source value | source_id example | Mapping file |
+| Field | Type | Unit | Meaning |
 | --- | --- | --- | --- |
-| Materials Project | `mp` | `mp-149` | `mp.yaml` |
-| OQMD | `oqmd` | OQMD entry ID | `oqmd.yaml` |
-| AFLOW | `aflow` | AUID | `aflow.yaml` |
-| Citrine | `citrine` | Citrine entry ID | `citrine.yaml` |
-| JARVIS | `jarvis` | JID | `jarvis.yaml` |
+| phonon_band_structure_path | string | path | Path to the downloaded phonon band-structure artifact. |
+| phonon_dos_path | string | path | Path to the downloaded phonon DOS artifact. |
+| debye_temperature | float | varies | Source-reported debye temperature; use it with the other fields in this category. |
+| heat_capacity | object | varies | Source-reported heat capacity; use it with the other fields in this category. |
+| thermal_conductivity | float | varies | Source-reported thermal conductivity; use it with the other fields in this category. |
 
-When a source field has no corresponding standard field, it is not forcibly converted. Complete source data and non-normalized properties should remain traceable through raw output files or source-specific structures.
+## XAS and Provenance
 
-## Maintenance and Validation
+| Field | Type | Unit | Meaning |
+| --- | --- | --- | --- |
+| xas_path | string | path | Path to the downloaded XAS artifact. |
+| property_paths | object | object | Map of property names to stored artifact paths. |
+| property_errors | object | object | Source-reported property errors; use it with the other fields in this category. |
+| properties_requested | boolean | object | Source-reported properties requested; use it with the other fields in this category. |
+| raw_path | string | path | Source-reported raw path; use it with the other fields in this category. |
+| normalized_path | string | path | Source-reported normalized path; use it with the other fields in this category. |
+| content_hash | string | - | Content hash for change detection and deduplication. |
+| has_props | object | - | Source-reported has props; use it with the other fields in this category. |
+| has_reconstructed | boolean | - | Source-reported has reconstructed; use it with the other fields in this category. |
+| property_name | string | - | Source-reported property name; use it with the other fields in this category. |
+| warnings | array | object | Source-reported warnings; use it with the other fields in this category. |
+| xas_summary | object | object | Source-reported xas summary; use it with the other fields in this category. |
+| source_documents | object | object | Raw source documents used to build this record. |
+| source_extra | object | object | Source-specific fields not promoted to the standard schema. |
 
-When changing fields, check all of the following:
+## Other Source Fields
 
-1. `standard.yaml`: field names, types, enums, and descriptions.
-2. `catalog.yaml`: field count and field order.
-3. `sources/dft/*/normalize.py`: source normalization logic.
-4. `schemas/dft/*.yaml`: field mappings and property endpoints.
+| Field | Type | Unit | Meaning |
+| --- | --- | --- | --- |
+| atom_count | integer | - | Source-reported atom count; use it with the other fields in this category. |
+| updated_at | string | - | Source-reported updated at; use it with the other fields in this category. |
+| last_updated | string | - | Source-reported last updated; use it with the other fields in this category. |
 
-```powershell
-python -m compileall -q sources\dft\mp crawler\dft\mp
-```
+## Data Source Mapping
 
+| Source | Mapping file |
+| --- | --- |
+| Materials Project | [mp.yaml](./mp.yaml) |
+| AFLOW | [aflow.yaml](./aflow.yaml) |
+
+**Total: 142 fields.**

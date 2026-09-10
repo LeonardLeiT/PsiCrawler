@@ -14,8 +14,10 @@ Each database and paper source is implemented independently because different so
 ## 🔥 Latest Updates
 
 - 2026-09-10 Added a schema-driven Materials Project adapter with source-specific API access, 26 material routes, complete Summary capture, route-specific queries, CIF export, normalized records, and SQLite indexing.
-- Added single-record and batch crawling entrypoints for Materials Project.
-- Downloaded data is stored locally under `data/` and excluded from Git.
+- 2026-09-10 Added an AFLOW adapter with categorized raw storage, normalized DFT records, property-path tracking, and SQLite indexing.
+- 2026-09-10 AFLOW XZ artifacts are decompressed into their original directories after download, and the compressed files are removed after successful conversion.
+- 2026-09-10 Downloaded data is stored locally under `data/` and excluded from Git.
+- 2026-09-10 Added single-record and batch crawling entrypoints for Materials Project.
 
 ## 🌟 Quick Start
 

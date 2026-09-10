@@ -81,6 +81,7 @@ mapping:
   angle_beta: {field: angle_beta}
   angle_gamma: {field: angle_gamma}
   density: {field: density}
+  density_atomic: {field: density_atomic}
   volume: {field: volume_cell}
   crystal_system: {field: crystal_system}
   spacegroup_number: {field: spacegroup_number}
@@ -92,6 +93,7 @@ mapping:
   formation_energy: {field: formation_energy}
   formation_energy_per_atom: {field: formation_energy_per_atom}
   band_gap: {field: Egap}
+  fermi_level: {field: fermi_level}
   band_gap_type: {field: Egap_type}
   is_metal: {field: is_metal}
   is_gap_direct: {field: is_gap_direct}
@@ -113,14 +115,11 @@ mapping:
   u_values: {field: u_values}
   relaxation_status: {field: relaxation_status}
   pressure: {field: pressure}
-  magnetic_ordering: {field: Egap_type}
   total_magnetization: {field: total_magnetization}
   magnetization_per_atom: {field: magnetization_per_atom}
   magnetic_moments: {field: magnetic_moments}
   magnetic_site_count: {field: magnetic_site_count}
-  bulk_modulus: {field: ael_bulk_modulus_vrh}
   bulk_modulus_vrh: {field: bulk_modulus_vrh}
-  shear_modulus: {field: ael_shear_modulus_vrh}
   shear_modulus_vrh: {field: shear_modulus_vrh}
   youngs_modulus: {field: ael_youngs_modulus_vrh}
   poisson_ratio: {field: ael_poisson_ratio}
@@ -128,19 +127,15 @@ mapping:
   thermal_conductivity: {field: agl_thermal_conductivity_300K}
   band_structure_path: {field: band_structure_path}
   dos_path: {field: dos_path}
+  bandstructure_summary: {field: bandstructure_summary}
+  dos_summary: {field: dos_summary}
+  property_paths: {field: property_paths}
   elastic_tensor_path: {field: elastic_tensor_path}
   phonon_band_structure_path: {field: phonon_band_structure_path}
   phonon_dos_path: {field: phonon_dos_path}
-  has_phonon: {field: has_phonon}
-  has_elasticity: {field: has_elasticity}
-  has_dielectric: {field: has_dielectric}
-  has_structure: {field: has_structure}
-  has_band_structure: {field: has_band_structure}
-  has_dos: {field: has_dos}
-  has_magnetism: {field: is_magnetic}
   is_magnetic: {field: is_magnetic}
-  nelements: {field: nelements}
   formula_anonymous: {field: formula_anonymous}
+  possible_species: {field: possible_species}
   composition_reduced: {field: composition_reduced}
   last_updated: {field: last_updated}
   updated_at: {field: updated_at}

@@ -183,11 +183,9 @@ mapping:
   decomposes_to: {field: decomposes_to}
   deprecation_reasons: {field: deprecation_reasons}
   grain_boundaries: {field: grain_boundaries}
-  has_props: {field: has_props}
   has_reconstructed: {field: has_reconstructed, transform: to_bool}
   is_magnetic: {field: is_magnetic, transform: to_bool}
   last_updated: {field: last_updated}
-  nelements: {field: nelements, transform: to_int}
   num_unique_magnetic_sites: {field: num_unique_magnetic_sites, transform: to_int}
   origins: {field: origins}
   possible_species: {field: possible_species}
@@ -240,11 +238,9 @@ mapping:
   cbm: {field: cbm}
   vbm: {field: vbm}
   fermi_level: {field: efermi}
-  bulk_modulus: {field: bulk_modulus.vrh}
   bulk_modulus_voigt: {field: bulk_modulus.voigt}
   bulk_modulus_reuss: {field: bulk_modulus.reuss}
   bulk_modulus_vrh: {field: bulk_modulus.vrh}
-  shear_modulus: {field: shear_modulus.vrh}
   shear_modulus_voigt: {field: shear_modulus.voigt}
   shear_modulus_reuss: {field: shear_modulus.reuss}
   shear_modulus_vrh: {field: shear_modulus.vrh}
@@ -257,8 +253,6 @@ mapping:
   piezoelectric_modulus: {field: e_ij_max}
   magnetic_ordering: {field: ordering}
   total_magnetization: {field: total_magnetization}
-  total_magnetization_normalized_volume: {field: total_magnetization_normalized_vol}
-  total_magnetization_normalized_formula: {field: total_magnetization_normalized_formula_units}
   magnetic_site_count: {field: num_magnetic_sites}
   weighted_surface_energy: {field: weighted_surface_energy}
   weighted_work_function: {field: weighted_work_function}

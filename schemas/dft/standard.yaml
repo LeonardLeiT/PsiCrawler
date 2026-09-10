@@ -69,22 +69,16 @@ fields:
   cbm: {type: float, nullable: true, unit: eV}
   vbm: {type: float, nullable: true, unit: eV}
   fermi_level: {type: float, nullable: true, unit: eV}
-  band_structure: {type: object, nullable: true}
   band_structure_path: {type: string, nullable: true}
-  density_of_states: {type: object, nullable: true}
   dos_path: {type: string, nullable: true}
   magnetic_ordering: {type: string, nullable: true}
   total_magnetization: {type: float, nullable: true, unit: Bohr magneton}
   magnetization_per_atom: {type: float, nullable: true, unit: Bohr magneton/atom}
-  total_magnetization_normalized_volume: {type: float, nullable: true}
-  total_magnetization_normalized_formula: {type: float, nullable: true}
   magnetic_site_count: {type: integer, nullable: true}
   magnetic_moments: {type: array, nullable: true}
-  bulk_modulus: {type: float, nullable: true, unit: GPa}
   bulk_modulus_voigt: {type: float, nullable: true, unit: GPa}
   bulk_modulus_reuss: {type: float, nullable: true, unit: GPa}
   bulk_modulus_vrh: {type: float, nullable: true, unit: GPa}
-  shear_modulus: {type: float, nullable: true, unit: GPa}
   shear_modulus_voigt: {type: float, nullable: true, unit: GPa}
   shear_modulus_reuss: {type: float, nullable: true, unit: GPa}
   shear_modulus_vrh: {type: float, nullable: true, unit: GPa}
@@ -106,30 +100,16 @@ fields:
   weighted_work_function: {type: float, nullable: true, unit: eV}
   work_function: {type: float, nullable: true, unit: eV}
   shape_factor: {type: float, nullable: true}
-  phonon_band_structure: {type: object, nullable: true}
   phonon_band_structure_path: {type: string, nullable: true}
-  phonon_dos: {type: object, nullable: true}
   phonon_dos_path: {type: string, nullable: true}
   debye_temperature: {type: float, nullable: true, unit: K}
   heat_capacity: {type: object, nullable: true}
   thermal_conductivity: {type: float, nullable: true}
-  xas: {type: object, nullable: true}
   xas_path: {type: string, nullable: true}
   property_paths: {type: object, nullable: true}
-  source_properties: {type: object, nullable: true}
-  source_property_paths: {type: object, nullable: true}
   property_errors: {type: object, nullable: true}
   download_status: {type: string, nullable: true}
   properties_requested: {type: boolean, nullable: true}
-  has_structure: {type: boolean, nullable: true}
-  has_band_structure: {type: boolean, nullable: true}
-  has_dos: {type: boolean, nullable: true}
-  has_phonon: {type: boolean, nullable: true}
-  has_elasticity: {type: boolean, nullable: true}
-  has_dielectric: {type: boolean, nullable: true}
-  has_piezoelectric: {type: boolean, nullable: true}
-  has_magnetism: {type: boolean, nullable: true}
-  has_xas: {type: boolean, nullable: true}
   raw_path: {type: string, nullable: true}
   normalized_path: {type: string, nullable: true}
   retrieved_at: {type: string, nullable: true}
@@ -149,7 +129,6 @@ fields:
   has_reconstructed: {type: boolean, nullable: true}
   is_magnetic: {type: boolean, nullable: true}
   last_updated: {type: string, nullable: true}
-  nelements: {type: integer, nullable: true}
   num_unique_magnetic_sites: {type: integer, nullable: true}
   origins: {type: array, nullable: true}
   possible_species: {type: array, nullable: true}

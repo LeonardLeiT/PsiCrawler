@@ -22,6 +22,27 @@ def _first_path(paths: list[Path], patterns: tuple[str, ...]) -> Path | None:
     return None
 
 
+def _compact_electronic_summary(document: dict[str, Any] | None, kind: str) -> dict[str, Any] | None:
+    """Create a small summary from an AFLOW band or DOS JSON document.
+
+    Args:
+        document (dict[str, Any] | None): Parsed AFLOW electronic document.
+        kind (str): Either bandstructure or dos.
+
+    Returns:
+        dict[str, Any] | None: Compact metadata summary without large arrays.
+    """
+    if not document:
+        return None
+    keys = ("name", "Emin", "Emax", "Efermi", "n_kpoints", "n_bands", "title")
+    summary = {key: document[key] for key in keys if key in document}
+    if "DOS_grid" in document and isinstance(document["DOS_grid"], list):
+        summary["energy_grid_points"] = len(document["DOS_grid"])
+    if kind == "bandstructure" and isinstance(document.get("bands_data"), list):
+        summary["bands_data_points"] = len(document["bands_data"])
+    return summary or None
+
+
 def _load_json(path: Path) -> dict[str, Any] | None:
     """Load a small AFLOW property JSON file, including .xz files."""
     import json
@@ -142,6 +163,9 @@ def enrich_aflow_document(document: dict[str, Any], downloaded_files: Iterable[s
     enriched["elements"] = elements
     enriched["composition_standard"] = composition
     enriched["element_count"] = len(elements) if elements else enriched.get("nspecies")
+    enriched["possible_species"] = enriched.get("species")
+    if enriched.get("volume_cell") and enriched.get("natoms"):
+        enriched["density_atomic"] = float(enriched["natoms"]) / float(enriched["volume_cell"])
     enriched["chemical_system"] = "-".join(elements) if elements else None
     enriched["spacegroup_number"] = enriched.get("spacegroup_relax")
     enriched["point_group"] = enriched.get("point_group_Hermann_Mauguin")
@@ -156,7 +180,9 @@ def enrich_aflow_document(document: dict[str, Any], downloaded_files: Iterable[s
     enriched["spin_polarized"] = enriched.get("spin_cell") is not None or enriched.get("spinD") is not None
     enriched["is_metal"] = bool(enriched.get("Egap") is not None and float(enriched["Egap"]) <= 0)
     gap_type = str(enriched.get("Egap_type") or "").lower()
-    enriched["is_gap_direct"] = bool(gap_type) if "direct" in gap_type else None
+    enriched["is_gap_direct"] = gap_type == "direct" or gap_type.endswith("-direct")
+    enriched["fermi_level"] = enriched.get("Efermi")
+    enriched["formation_energy"] = enriched.get("enthalpy_formation_cell")
     enriched["total_magnetization"] = enriched.get("spin_cell")
     enriched["magnetization_per_atom"] = enriched.get("spin_atom")
     spin_sites = enriched.get("spinD")
@@ -172,7 +198,6 @@ def enrich_aflow_document(document: dict[str, Any], downloaded_files: Iterable[s
     enriched.update(_parse_vasp_inputs(paths))
     enriched["formula_anonymous"] = structure.composition.anonymized_formula if structure is not None else None
     enriched["composition_reduced"] = composition
-    enriched["nelements"] = len(elements) if elements else None
     enriched["is_magnetic"] = bool(enriched.get("spin_cell") not in (None, 0) or any(float(value) != 0 for value in (spin_sites or []))) if isinstance(spin_sites, list) else bool(enriched.get("spin_cell"))
     enriched["last_updated"] = enriched.get("aflowlib_date")
     enriched["updated_at"] = enriched.get("aflowlib_date")
@@ -183,9 +208,6 @@ def enrich_aflow_document(document: dict[str, Any], downloaded_files: Iterable[s
     enriched["elastic_tensor_path"] = str(ael_path) if ael_path else None
     enriched["phonon_band_structure_path"] = str(agl_path) if agl_path else None
     enriched["phonon_dos_path"] = str(agl_path) if agl_path else None
-    enriched["has_elasticity"] = bool(ael_path or enriched.get("ael_bulk_modulus_vrh") is not None)
-    enriched["has_phonon"] = bool(agl_path)
-    enriched["has_dielectric"] = bool(dielectric_path)
     for property_path in (ael_path, agl_path):
         if property_path:
             property_data = _load_json(property_path)
@@ -199,14 +221,30 @@ def enrich_aflow_document(document: dict[str, Any], downloaded_files: Iterable[s
     structure_json = _first_path(paths, ("structure_relax",))
     band_path = _first_path(paths, ("bandsdata", "eigenval", "edata.bands"))
     dos_path = _first_path(paths, ("dosdata", "doscar", "edata.static"))
+    band_json_path = next((path for path in paths if "bandsdata.json" in path.name.lower()), None)
+    dos_json_path = next((path for path in paths if "dosdata.json" in path.name.lower()), None)
+    band_document = _load_json(band_json_path) if band_json_path else None
+    dos_document = _load_json(dos_json_path) if dos_json_path else None
+    enriched["bandstructure_summary"] = _compact_electronic_summary(band_document, "bandstructure")
+    enriched["dos_summary"] = _compact_electronic_summary(dos_document, "dos")
+    if enriched.get("fermi_level") is None:
+        enriched["fermi_level"] = (band_document or {}).get("Efermi") or (dos_document or {}).get("Efermi")
     enriched["structure_path"] = str(structure_path) if structure_path else None
     enriched["structure_json_path"] = str(structure_json) if structure_json else None
     enriched["structure_format"] = ["cif"] if structure_path else None
     enriched["band_structure_path"] = str(band_path) if band_path else None
     enriched["dos_path"] = str(dos_path) if dos_path else None
-    enriched["has_structure"] = structure_path is not None or enriched.get("geometry") is not None
-    enriched["has_band_structure"] = band_path is not None
-    enriched["has_dos"] = dos_path is not None
+    property_paths = {}
+    for name, path in {
+        "elasticity": ael_path,
+        "phonon": agl_path,
+        "dielectric": dielectric_path,
+        "band_structure": band_path,
+        "dos": dos_path,
+    }.items():
+        if path:
+            property_paths[name] = str(path)
+    enriched["property_paths"] = property_paths or None
     return enriched
 
 
@@ -222,6 +260,7 @@ def normalize_aflow(document: dict[str, Any], downloaded_files: Iterable[str | P
     """
     enriched = enrich_aflow_document(document, downloaded_files)
     return normalize_by_schema(enriched, STANDARD_SCHEMA, AFLOW_MAPPING)
+
 
 
 

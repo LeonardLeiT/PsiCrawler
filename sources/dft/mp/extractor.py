@@ -38,7 +38,6 @@ def extract_one(
     normalized = normalize_summary(mapping_document)
     properties: dict[str, int] = {}
     property_paths: dict[str, str] = {}
-    source_properties: dict[str, list[dict[str, Any]]] = {}
     property_errors: dict[str, str] = {}
     if include_properties:
         for route in PROPERTY_ENDPOINTS:
@@ -47,7 +46,6 @@ def extract_one(
                 documents = client.fetch_property(route, material_id, summary)
                 property_path = save_property(config, material_id, endpoint, documents)
                 properties[endpoint] = len(documents)
-                source_properties[endpoint] = documents
                 if property_path:
                     property_paths[endpoint] = str(property_path)
             except Exception as error:
@@ -56,17 +54,9 @@ def extract_one(
 
     normalized["property_paths"] = property_paths
     normalized["source_documents"] = {"properties": property_paths}
-    normalized["source_properties"] = source_properties
-    normalized["source_property_paths"] = property_paths
     normalized["property_errors"] = property_errors
     normalized["download_status"] = "partial" if property_errors else "success"
     normalized["properties_requested"] = include_properties
-    normalized["has_structure"] = normalized.get("structure") is not None
-    normalized["has_elasticity"] = properties.get("elasticity", 0) > 0
-    normalized["has_dielectric"] = properties.get("dielectric", 0) > 0
-    normalized["has_piezoelectric"] = properties.get("piezoelectric", 0) > 0
-    normalized["has_magnetism"] = properties.get("magnetism", 0) > 0
-    normalized["has_xas"] = properties.get("xas", 0) > 0
     normalized_path = save_record(config, summary, normalized)
     return {
         "requested_id": material_id,
