@@ -1,0 +1,150 @@
+source: aflow
+standard: dft
+schema_version: "1.0"
+
+# AFLOW exposes a large source-specific metadata model. These fields are
+# preserved in aflowlib.json and are progressively mapped into standard.yaml.
+source_fields:
+  - auid
+  - aurl
+  - catalog
+  - data_api
+  - data_source
+  - compound
+  - prototype
+  - nspecies
+  - natoms
+  - density
+  - species
+  - composition
+  - stoichiometry
+  - geometry
+  - volume_cell
+  - volume_atom
+  - spacegroup_orig
+  - spacegroup_relax
+  - crystal_family
+  - crystal_system
+  - crystal_class
+  - point_group_Hermann_Mauguin
+  - energy_cell
+  - energy_atom
+  - enthalpy_formation_atom
+  - Egap
+  - Egap_type
+  - pressure
+  - stress_tensor
+  - ael_bulk_modulus_vrh
+  - ael_shear_modulus_vrh
+  - ael_youngs_modulus_vrh
+  - ael_poisson_ratio
+  - ael_debye_temperature
+  - agl_debye
+  - agl_thermal_conductivity_300K
+  - agl_thermal_expansion_300K
+  - spin_cell
+  - spin_atom
+  - spinD
+  - bader_net_charges
+  - bader_atomic_volumes
+  - code
+  - dft_type
+  - energy_cutoff
+  - calculation_time
+  - calculation_memory
+  - calculation_cores
+  - aflow_version
+  - aflowlib_version
+  - aflowlib_date
+
+mapping:
+  source: {value: aflow}
+  requested_id: {transform: requested_id}
+  source_id: {field: auid}
+  source_url: {field: aurl}
+  formula: {field: compound}
+  formula_reduced: {field: formula_reduced}
+  chemical_system: {field: chemical_system}
+  elements: {field: elements}
+  composition: {field: composition_standard}
+  element_count: {field: element_count}
+  atom_count: {field: natoms}
+  structure: {field: structure}
+  structure_path: {field: structure_path}
+  structure_json_path: {field: structure_json_path}
+  structure_format: {field: structure_format}
+  lattice_matrix: {field: lattice_matrix}
+  lattice_a: {field: lattice_a}
+  lattice_b: {field: lattice_b}
+  lattice_c: {field: lattice_c}
+  angle_alpha: {field: angle_alpha}
+  angle_beta: {field: angle_beta}
+  angle_gamma: {field: angle_gamma}
+  density: {field: density}
+  volume: {field: volume_cell}
+  crystal_system: {field: crystal_system}
+  spacegroup_number: {field: spacegroup_number}
+  spacegroup_symbol: {field: spacegroup_symbol}
+  point_group: {field: point_group}
+  total_energy: {field: energy_cell}
+  energy_per_atom: {field: energy_atom}
+  uncorrected_energy_per_atom: {field: energy_atom}
+  formation_energy: {field: formation_energy}
+  formation_energy_per_atom: {field: formation_energy_per_atom}
+  band_gap: {field: Egap}
+  band_gap_type: {field: Egap_type}
+  is_metal: {field: is_metal}
+  is_gap_direct: {field: is_gap_direct}
+  theoretical: {value: true}
+  calculation_method: {field: calculation_method}
+  calculation_type: {field: calculation_type}
+  code: {field: code}
+  code_version: {field: code_version}
+  functional: {field: functional}
+  exchange_correlation: {field: exchange_correlation}
+  pseudopotential: {field: pseudopotential}
+  basis_set: {field: basis_set}
+  kpoint_mesh: {field: kpoint_mesh}
+  energy_cutoff: {field: energy_cutoff}
+  smearing: {field: smearing}
+  spin_polarized: {field: spin_polarized}
+  spin_orbit_coupling: {field: spin_orbit_coupling}
+  hubbard_u: {field: hubbard_u}
+  u_values: {field: u_values}
+  relaxation_status: {field: relaxation_status}
+  pressure: {field: pressure}
+  magnetic_ordering: {field: Egap_type}
+  total_magnetization: {field: total_magnetization}
+  magnetization_per_atom: {field: magnetization_per_atom}
+  magnetic_moments: {field: magnetic_moments}
+  magnetic_site_count: {field: magnetic_site_count}
+  bulk_modulus: {field: ael_bulk_modulus_vrh}
+  bulk_modulus_vrh: {field: bulk_modulus_vrh}
+  shear_modulus: {field: ael_shear_modulus_vrh}
+  shear_modulus_vrh: {field: shear_modulus_vrh}
+  youngs_modulus: {field: ael_youngs_modulus_vrh}
+  poisson_ratio: {field: ael_poisson_ratio}
+  debye_temperature: {field: debye_temperature}
+  thermal_conductivity: {field: agl_thermal_conductivity_300K}
+  band_structure_path: {field: band_structure_path}
+  dos_path: {field: dos_path}
+  elastic_tensor_path: {field: elastic_tensor_path}
+  phonon_band_structure_path: {field: phonon_band_structure_path}
+  phonon_dos_path: {field: phonon_dos_path}
+  has_phonon: {field: has_phonon}
+  has_elasticity: {field: has_elasticity}
+  has_dielectric: {field: has_dielectric}
+  has_structure: {field: has_structure}
+  has_band_structure: {field: has_band_structure}
+  has_dos: {field: has_dos}
+  has_magnetism: {field: is_magnetic}
+  is_magnetic: {field: is_magnetic}
+  nelements: {field: nelements}
+  formula_anonymous: {field: formula_anonymous}
+  composition_reduced: {field: composition_reduced}
+  last_updated: {field: last_updated}
+  updated_at: {field: updated_at}
+  schema_version: {value: "1.0"}
+  api_version: {value: aflowlib}
+  retrieved_at: {transform: now}
+

@@ -1,0 +1,290 @@
+source: mp
+standard: dft
+schema_version: "1.0"
+
+summary_fields:
+  - builder_meta
+  - nsites
+  - elements
+  - nelements
+  - composition
+  - composition_reduced
+  - formula_pretty
+  - formula_anonymous
+  - chemsys
+  - volume
+  - density
+  - density_atomic
+  - symmetry
+  - property_name
+  - material_id
+  - deprecated
+  - deprecation_reasons
+  - last_updated
+  - origins
+  - warnings
+  - structure
+  - task_ids
+  - uncorrected_energy_per_atom
+  - energy_per_atom
+  - formation_energy_per_atom
+  - energy_above_hull
+  - is_stable
+  - equilibrium_reaction_energy_per_atom
+  - decomposes_to
+  - xas
+  - grain_boundaries
+  - band_gap
+  - cbm
+  - vbm
+  - efermi
+  - is_gap_direct
+  - is_metal
+  - es_source_calc_id
+  - bandstructure
+  - dos
+  - dos_energy_up
+  - dos_energy_down
+  - is_magnetic
+  - ordering
+  - total_magnetization
+  - total_magnetization_normalized_vol
+  - total_magnetization_normalized_formula_units
+  - num_magnetic_sites
+  - num_unique_magnetic_sites
+  - types_of_magnetic_species
+  - bulk_modulus
+  - shear_modulus
+  - universal_anisotropy
+  - homogeneous_poisson
+  - e_total
+  - e_ionic
+  - e_electronic
+  - n
+  - e_ij_max
+  - weighted_surface_energy_EV_PER_ANG2
+  - weighted_surface_energy
+  - weighted_work_function
+  - surface_anisotropy
+  - shape_factor
+  - has_reconstructed
+  - possible_species
+  - has_props
+  - theoretical
+  - database_IDs
+available_routes:
+  - absorption
+  - alloys
+  - bonds
+  - chemenv
+  - core
+  - dielectric
+  - electronic_structure
+  - electronic_structure_bandstructure
+  - electronic_structure_dos
+  - elasticity
+  - eos
+  - grain_boundaries
+  - insertion_electrodes
+  - magnetism
+  - oxidation_states
+  - phonon
+  - piezoelectric
+  - provenance
+  - robocrys
+  - similarity
+  - substrates
+  - surface_properties
+  - synthesis
+  - tasks
+  - thermo
+  - xas
+
+source_extra_exclude:
+  - task_ids
+  - database_IDs
+  - phonon_IDs
+  - builder_meta
+
+property_endpoints:
+  - name: absorption
+    path: absorption
+  - name: alloys
+    path: alloys
+  - name: bonds
+    path: bonds
+  - name: chemenv
+    path: chemenv
+  - name: core
+    path: core
+  - name: dielectric
+    path: dielectric
+  - name: electronic_structure
+    path: electronic_structure
+  - name: electronic_structure_bandstructure
+    path: electronic_structure/bandstructure
+    strategy: summary_field
+    summary_field: bandstructure
+  - name: electronic_structure_dos
+    path: electronic_structure/dos
+    strategy: summary_field
+    summary_field: dos
+  - name: elasticity
+    path: elasticity
+  - name: eos
+    path: eos
+    query_field: task_ids
+  - name: grain_boundaries
+    path: grain_boundaries
+  - name: insertion_electrodes
+    path: insertion_electrodes
+    query_field: formula
+    context_field: formula_pretty
+  - name: magnetism
+    path: magnetism
+  - name: oxidation_states
+    path: oxidation_states
+  - name: phonon
+    path: phonon
+    query_field: identifiers
+    context_field: phonon_IDs
+  - name: piezoelectric
+    path: piezoelectric
+  - name: provenance
+    path: provenance
+  - name: robocrys
+    path: robocrys
+  - name: similarity
+    path: similarity
+  - name: substrates
+    path: substrates
+    query_field: film_id
+  - name: surface_properties
+    path: surface_properties
+  - name: synthesis
+    path: synthesis
+  - name: tasks
+    path: tasks
+    query_field: task_ids
+  - name: thermo
+    path: thermo
+  - name: xas
+    path: xas
+    query_field: formula
+    context_field: formula_pretty
+mapping:
+  source: {value: mp}
+  requested_id: {transform: requested_id}
+  source_id: {field: material_id}
+  source_url: {field: material_id, transform: build_mp_url}
+  formula_anonymous: {field: formula_anonymous}
+  composition_reduced: {field: composition_reduced}
+  density_atomic: {field: density_atomic}
+  decomposes_to: {field: decomposes_to}
+  deprecation_reasons: {field: deprecation_reasons}
+  grain_boundaries: {field: grain_boundaries}
+  has_props: {field: has_props}
+  has_reconstructed: {field: has_reconstructed, transform: to_bool}
+  is_magnetic: {field: is_magnetic, transform: to_bool}
+  last_updated: {field: last_updated}
+  nelements: {field: nelements, transform: to_int}
+  num_unique_magnetic_sites: {field: num_unique_magnetic_sites, transform: to_int}
+  origins: {field: origins}
+  possible_species: {field: possible_species}
+  property_name: {field: property_name}
+  types_of_magnetic_species: {field: types_of_magnetic_species}
+  uncorrected_energy_per_atom: {field: uncorrected_energy_per_atom}
+  warnings: {field: warnings}
+  weighted_surface_energy_ev_per_ang2: {field: weighted_surface_energy_EV_PER_ANG2}
+  bandstructure_summary: {field: bandstructure}
+  dos_summary: {field: dos}
+  dos_energy_up: {field: dos_energy_up}
+  dos_energy_down: {field: dos_energy_down}
+  xas_summary: {field: xas}
+  builder_meta: {field: builder_meta}
+  formula: {field: formula_pretty}
+  formula_reduced: {field: formula_pretty, transform: normalize_formula}
+  chemical_system: {field: chemsys, transform: normalize_chemical_system}
+  elements: {field: elements, transform: normalize_elements}
+  composition: {field: composition}
+  element_count: {field: elements, transform: count_items}
+  atom_count: {field: nsites, transform: to_int}
+  structure: {field: structure}
+  structure_format: {value: [json]}
+  lattice_matrix: {field: structure.lattice.matrix}
+  lattice_a: {field: structure.lattice.a}
+  lattice_b: {field: structure.lattice.b}
+  lattice_c: {field: structure.lattice.c}
+  angle_alpha: {field: structure.lattice.alpha}
+  angle_beta: {field: structure.lattice.beta}
+  angle_gamma: {field: structure.lattice.gamma}
+  volume: {field: volume}
+  density: {field: density}
+  crystal_system: {field: symmetry.crystal_system}
+  spacegroup_number: {field: symmetry.number}
+  spacegroup_symbol: {field: symmetry.symbol}
+  calculation_method: {value: DFT}
+  functional: {field: thermo.0.functional, default: PBE}
+  energy_per_atom: {field: energy_per_atom}
+  total_energy: {field: total_energy}
+  uncorrected_energy: {field: uncorrected_energy}
+  formation_energy_per_atom: {field: formation_energy_per_atom}
+  energy_above_hull: {field: energy_above_hull}
+  equilibrium_reaction_energy: {field: equilibrium_reaction_energy_per_atom}
+  is_stable: {field: is_stable, transform: to_bool}
+  theoretical: {field: theoretical, transform: to_bool}
+  deprecated: {field: deprecated, transform: to_bool}
+  band_gap: {field: band_gap}
+  is_metal: {field: is_metal, transform: to_bool}
+  is_gap_direct: {field: is_gap_direct, transform: to_bool}
+  cbm: {field: cbm}
+  vbm: {field: vbm}
+  fermi_level: {field: efermi}
+  bulk_modulus: {field: bulk_modulus.vrh}
+  bulk_modulus_voigt: {field: bulk_modulus.voigt}
+  bulk_modulus_reuss: {field: bulk_modulus.reuss}
+  bulk_modulus_vrh: {field: bulk_modulus.vrh}
+  shear_modulus: {field: shear_modulus.vrh}
+  shear_modulus_voigt: {field: shear_modulus.voigt}
+  shear_modulus_reuss: {field: shear_modulus.reuss}
+  shear_modulus_vrh: {field: shear_modulus.vrh}
+  poisson_ratio: {field: homogeneous_poisson}
+  elastic_anisotropy: {field: universal_anisotropy}
+  dielectric_total: {field: e_total}
+  dielectric_ionic: {field: e_ionic}
+  dielectric_electronic: {field: e_electronic}
+  refractive_index: {field: n}
+  piezoelectric_modulus: {field: e_ij_max}
+  magnetic_ordering: {field: ordering}
+  total_magnetization: {field: total_magnetization}
+  total_magnetization_normalized_volume: {field: total_magnetization_normalized_vol}
+  total_magnetization_normalized_formula: {field: total_magnetization_normalized_formula_units}
+  magnetic_site_count: {field: num_magnetic_sites}
+  weighted_surface_energy: {field: weighted_surface_energy}
+  weighted_work_function: {field: weighted_work_function}
+  surface_anisotropy: {field: surface_anisotropy}
+  shape_factor: {field: shape_factor}
+  schema_version: {value: "1.0"}
+  api_version: {value: mp-api-rest}
+  retrieved_at: {transform: now}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
