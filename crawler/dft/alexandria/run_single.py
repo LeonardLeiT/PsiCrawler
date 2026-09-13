@@ -21,6 +21,7 @@ from sources.dft.alexandria.download import (
     OptimadeClient,
     get_dataset,
     optimade_record_to_document,
+    save_json_atomic,
     source_id_for,
 )
 
@@ -38,16 +39,23 @@ def extract_single(config: AlexandriaConfig, dataset_name: str, entry_id: str) -
     if record is None:
         raise LookupError(f"Alexandria record not found: {entry_id}")
     document = optimade_record_to_document(record)
+    raw_path = save_json_atomic(
+        config.raw_dir / "optimade" / dataset.name / f"{Path(entry_id).name}.json", record,
+    )
     standard = normalize_alexandria_optimade(
         document,
         dataset=dataset.name,
         functional=dataset.functional,
         dimensionality=dataset.dimensionality,
         structure_root=config.data_root / "structure",
+        raw_path=str(raw_path),
         requested_id=entry_id,
     )
-    standard["raw_path"] = None
-    standard["source_documents"] = {"optimade": f"{client.base_url}/structures/{entry_id}"}
+    standard["raw_path"] = str(raw_path)
+    standard["source_documents"] = {
+        "optimade": f"{client.base_url}/structures/{entry_id}",
+        "raw": str(raw_path),
+    }
     standard["download_status"] = "success"
     standard["properties_requested"] = False
     storage.save(config.database_path, standard, document, columns=field_names(), index_fields=INDEX_FIELDS)

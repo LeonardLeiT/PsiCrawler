@@ -18,7 +18,7 @@ from sources.dft.alexandria.download import (
     BASE_URL,
     DATASETS,
     AlexandriaConfig,
-    completed,
+    CompletionIndex,
     download_file,
     get_dataset,
     iter_entries,
@@ -55,7 +55,8 @@ def _run_download_only(config: AlexandriaConfig, dataset, logger, manifest, max_
     return stats
 
 
-def _run_primary(config: AlexandriaConfig, dataset, args, logger, manifest) -> dict:
+def _run_primary(config: AlexandriaConfig, dataset, args, logger, manifest,
+                 completion_index: CompletionIndex) -> dict:
     """Stream, normalize, and index a primary entry dataset.
 
     Each archive is downloaded and parsed independently, so one bad file is
@@ -96,7 +97,7 @@ def _run_primary(config: AlexandriaConfig, dataset, args, logger, manifest) -> d
                     file_failed += 1
                     append_manifest_item(manifest, {"file": name, "index": index, "status": "failed", "error": "missing mat_id"})
                     continue
-                if not args.no_resume and completed(config.database_path, dataset.name, mat_id):
+                if not args.no_resume and completion_index.is_completed(dataset.name, mat_id):
                     stats["skipped"] += 1
                     continue
                 try:
@@ -176,7 +177,8 @@ def main() -> None:
         if args.download_only or not dataset.is_primary:
             stats = _run_download_only(config, dataset, logger, manifest, args.max_files)
         else:
-            stats = _run_primary(config, dataset, args, logger, manifest)
+            with CompletionIndex(config.database_path) as completion_index:
+                stats = _run_primary(config, dataset, args, logger, manifest, completion_index)
     except Exception as error:
         logger.exception("[FATAL] dataset=%s", dataset.name)
         finish_manifest(manifest, {"status": "failed", "error": str(error)})

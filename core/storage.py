@@ -109,8 +109,13 @@ def _execute_with_retry(connection: sqlite3.Connection, statement: str, values: 
 
 
 def _content_hash(raw: Any) -> str:
-    """Return the canonical SHA-256 of a raw source document."""
-    payload = json.dumps(raw, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    """Return the canonical SHA-256 of a raw source document.
+
+    Non-finite floats are permitted because upstream archives legitimately
+    contain ``NaN`` (for example relaxed forces); rejecting them would silently
+    drop otherwise valid records.
+    """
+    payload = json.dumps(raw, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 

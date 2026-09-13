@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import math
 from datetime import datetime, timezone
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +31,12 @@ def load_yaml(path: str | Path) -> dict[str, Any]:
     """Load a YAML schema or mapping document."""
     with Path(path).open("r", encoding="utf-8") as stream:
         return yaml.safe_load(stream) or {}
+
+
+@lru_cache(maxsize=None)
+def _load_yaml_cached(path: str) -> dict[str, Any]:
+    """Load and cache a YAML document for the lifetime of the process."""
+    return load_yaml(path)
 
 
 def get_by_path(document: dict[str, Any], field_path: str | None) -> Any:
@@ -333,6 +340,8 @@ def enrich_entry(document: dict[str, Any], dataset: str, *, dataset_url: str | N
     if structure is not None:
         try:
             magmom = [site.properties.get("magmom") for site in structure]
+            if all(value is None for value in magmom):
+                magmom = None
         except Exception:
             magmom = None
     band_gap, is_metal, is_gap_direct, band_gap_type = _gap_fields(data.get("band_gap_ind"), data.get("band_gap_dir"))
@@ -368,6 +377,7 @@ def enrich_entry(document: dict[str, Any], dataset: str, *, dataset_url: str | N
         "dos_ef": data.get("dos_ef"),
         "energy_corrected": data.get("energy_corrected"),
         "phase_separation_energy": data.get("e_phase_separation"),
+        "stress": data.get("stress"),
         "prototype_id": data.get("prototype_id"),
         "location": data.get("location"),
         "run_timestamp": _timestamp_string(data.get("run_timestamp")),
@@ -464,8 +474,8 @@ def _timestamp_string(value: Any) -> str | None:
 
 def _apply_mapping(enriched: dict[str, Any], structure_root: str | Path | None,
                    raw_path: str | None = None) -> dict[str, Any]:
-    standard = load_yaml(STANDARD_PATH)
-    mapping = load_yaml(MAPPING_PATH)
+    standard = _load_yaml_cached(str(STANDARD_PATH))
+    mapping = _load_yaml_cached(str(MAPPING_PATH))
     rules = mapping.get("mapping", {})
     result: dict[str, Any] = {}
     for name in standard.get("fields", {}):

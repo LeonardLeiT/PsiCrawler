@@ -59,6 +59,7 @@ Unmapped values (`dos_ef`, `energy_corrected`, `phase_separation_energy`, `stres
 data/dft/alexandria/
 ├── raw/
 │   ├── pbe-3d/alexandria_00000.json.bz2
+│   ├── optimade/pbesol/agm001010489.json
 │   └── potcar-pbesol/potcar_pbesol.dat
 ├── structure/<dataset>_<mat_id>/<dataset>_<mat_id>.cif
 ├── index.sqlite          # normalized standard records

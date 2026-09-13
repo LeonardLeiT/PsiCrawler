@@ -29,7 +29,6 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Iterator
@@ -230,16 +229,24 @@ def source_id_for(dataset: str, mat_id: str) -> str:
 
 
 def _http_open(url: str, config: AlexandriaConfig, timeout: int | None = None):
-    """Open a URL with the configured user agent and retry policy."""
+    """Open a URL with the configured user agent and retry policy.
+
+    Client errors (4xx) other than 429 are permanent and raise immediately;
+    server errors and network failures are retried with a linear backoff.
+    """
     request = urllib.request.Request(url, headers={"User-Agent": config.user_agent})
     last_error: Exception | None = None
     for attempt in range(config.retry_count):
         try:
             return urllib.request.urlopen(request, timeout=timeout or config.request_timeout)
+        except urllib.error.HTTPError as error:
+            if 400 <= error.code < 500 and error.code != 429:
+                raise AlexandriaError(f"HTTP {error.code} for {url}: {error.reason}") from error
+            last_error = error
         except (urllib.error.URLError, TimeoutError, OSError) as error:
             last_error = error
-            if attempt < config.retry_count - 1:
-                time.sleep(min(config.retry_delay * (attempt + 1), 30.0))
+        if attempt < config.retry_count - 1:
+            time.sleep(min(config.retry_delay * (attempt + 1), 30.0))
     raise AlexandriaError(f"Failed to open {url}: {last_error}")
 
 
@@ -268,6 +275,21 @@ def _quiet_unlink(path: Path) -> None:
         path.unlink(missing_ok=True)
     except OSError:
         pass
+
+
+def save_json_atomic(path: str | Path, payload: Any) -> Path:
+    """Write a JSON document through a temporary file and rename it into place."""
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    temporary = target.with_name(f".{target.name}.{os.getpid()}.{uuid.uuid4().hex}.tmp")
+    try:
+        with temporary.open("w", encoding="utf-8") as stream:
+            json.dump(payload, stream, ensure_ascii=False, indent=2, default=str)
+        os.replace(temporary, target)
+    except Exception:
+        _quiet_unlink(temporary)
+        raise
+    return target
 
 
 # ---------------------------------------------------------------------------
@@ -534,24 +556,74 @@ def fetch_optimade_structure(
 # Resume
 # ---------------------------------------------------------------------------
 
-def _load_record(db_path: str | Path, source: str, identifier: str) -> dict[str, Any] | None:
-    """Read one normalized record by ``source_id`` or ``requested_id``."""
-    database = Path(db_path)
-    if not database.exists():
-        return None
-    with closing(sqlite3.connect(database)) as connection:
-        connection.row_factory = sqlite3.Row
+class CompletionIndex:
+    """Reusable read handle for resume checks during one crawler run.
+
+    Opening a new SQLite connection for every entry is expensive once a dataset
+    holds millions of records, so a run keeps one read connection and reuses it.
+    WAL mode makes writes committed by this or another process visible to it.
+    """
+
+    def __init__(self, db_path: str | Path, *, source: str = "alexandria",
+                 schema_version: str = "3.0"):
+        self._database = Path(db_path)
+        self._source = source
+        self._schema_version = schema_version
+        self._connection: sqlite3.Connection | None = None
+
+    def _connect(self) -> sqlite3.Connection:
+        if self._connection is None:
+            self._database.parent.mkdir(parents=True, exist_ok=True)
+            connection = sqlite3.connect(self._database, timeout=30.0)
+            connection.execute("PRAGMA busy_timeout=30000")
+            connection.execute("PRAGMA journal_mode=WAL")
+            self._connection = connection
+        return self._connection
+
+    def is_completed(self, dataset: str, mat_id: str) -> bool:
+        """Return whether one primary dataset entry is already indexed."""
+        row = self._load(source_id_for(dataset, mat_id))
+        if not row:
+            return False
+        if row["schema_version"] != self._schema_version:
+            return False
+        if row["download_status"] not in {"success", "partial"}:
+            return False
+        raw_path = row["raw_path"]
+        return bool(raw_path) and Path(raw_path).exists()
+
+    def _load(self, identifier: str) -> dict[str, Any] | None:
+        connection = self._connect()
         try:
             row = connection.execute(
-                "SELECT * FROM records WHERE source = ? AND (source_id = ? OR requested_id = ?)",
-                (source, identifier, identifier),
+                "SELECT schema_version, download_status, raw_path FROM records "
+                "WHERE source = ? AND (source_id = ? OR requested_id = ?)",
+                (self._source, identifier, identifier),
             ).fetchone()
         except sqlite3.OperationalError:
-            row = connection.execute(
-                "SELECT * FROM records WHERE source = ? AND source_id = ?",
-                (source, identifier),
-            ).fetchone()
-    return dict(row) if row is not None else None
+            try:
+                row = connection.execute(
+                    "SELECT schema_version, download_status, raw_path FROM records "
+                    "WHERE source = ? AND source_id = ?",
+                    (self._source, identifier),
+                ).fetchone()
+            except sqlite3.OperationalError:
+                return None
+        if row is None:
+            return None
+        return {"schema_version": row[0], "download_status": row[1], "raw_path": row[2]}
+
+    def close(self) -> None:
+        """Close the read connection if it was opened."""
+        if self._connection is not None:
+            self._connection.close()
+            self._connection = None
+
+    def __enter__(self) -> "CompletionIndex":
+        return self
+
+    def __exit__(self, *_: Any) -> None:
+        self.close()
 
 
 def completed(
@@ -562,25 +634,20 @@ def completed(
     source: str = "alexandria",
     schema_version: str = "3.0",
 ) -> bool:
-    """Return whether one primary dataset entry is already indexed."""
-    identifier = source_id_for(dataset, mat_id)
-    row = _load_record(db_path, source, identifier)
-    if not row:
-        return False
-    if row.get("schema_version") != schema_version:
-        return False
-    if row.get("download_status") not in {"success", "partial"}:
-        return False
-    raw_path = row.get("raw_path")
-    if not raw_path or not Path(raw_path).exists():
-        return False
-    return True
+    """Return whether one primary dataset entry is already indexed.
+
+    This opens a short-lived connection; long runs should reuse a
+    :class:`CompletionIndex` instead.
+    """
+    with CompletionIndex(db_path, source=source, schema_version=schema_version) as index:
+        return index.is_completed(dataset, mat_id)
 
 
 __all__ = [
     "AlexandriaConfig",
     "AlexandriaError",
     "BASE_URL",
+    "CompletionIndex",
     "DATASETS",
     "Dataset",
     "OptimadeClient",
@@ -595,5 +662,6 @@ __all__ = [
     "iter_entries",
     "list_remote_files",
     "optimade_record_to_document",
+    "save_json_atomic",
     "source_id_for",
 ]
