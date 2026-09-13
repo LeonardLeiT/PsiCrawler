@@ -13,10 +13,10 @@ PsiCrawler 是一个用于科研数据采集、标准化、存储和检索的项
 
 - 2026-09-13：新增 Alexandria (AMD) 适配器，支持流式批量 JSON.bz2 采集、OPTIMADE 按需查询、数据集命名空间标识符、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-10：新增基于 schema 驱动的 Materials Project 适配器，支持数据源专用 API、26 个材料接口、完整 Summary 字段采集、按接口查询、CIF 导出、标准化记录和 SQLite 索引。
-- 2026-09-10 新增 AFLOW 适配器，支持分类原始数据存储、标准化 DFT 记录、性质路径记录和 SQLite 索引。
-- 2026-09-10 AFLOW 的 XZ 文件会在下载后解压到原对应目录，转换成功后删除压缩文件。
-- 2026-09-10 下载数据保存在 `data/` 目录中，并已从 Git 跟踪中排除。
-- 2026-09-10 新增 Materials Project 单条和批量爬取入口。
+- 2026-09-10：新增 AFLOW 适配器，支持分类原始数据存储、标准化 DFT 记录、性质路径记录和 SQLite 索引。
+- 2026-09-10：AFLOW 的 XZ 文件会在下载后解压到原对应目录，转换成功后删除压缩文件。
+- 2026-09-10：下载数据保存在 `data/` 目录中，并已从 Git 跟踪中排除。
+- 2026-09-10：新增 Materials Project 单条和批量爬取入口。
 
 ## 🌟 快速开始
 
@@ -54,7 +54,7 @@ python -m crawler.dft.mp.run_batch --mp-ids mp-149,mp-13,mp-22526 --sleep 1
 
 统一 DFT 字段、字段分类、单位、枚举值和空值约定见共享契约 [`normalizers/dft/standard.yaml`](./normalizers/dft/standard.yaml)。
 
-#### Materials Project 
+#### Materials Project
 
 <img src="./Figure/mp_logo.png" alt="logo" style="height:3em;">
 

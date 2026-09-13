@@ -54,7 +54,9 @@ Overview: [DFT Sources](./document/dft/overview.md)
 
 The unified DFT field definitions, categories, units, enum values, and null-value conventions are documented in the shared contract [`normalizers/dft/standard.yaml`](./normalizers/dft/standard.yaml).
 
-#### Materials Project <img src="./Figure/mp_logo.png" alt="logo" style="height:1.5em;">
+#### Materials Project
+
+<img src="./Figure/mp_logo.png" alt="logo" style="height:3em;">
 
 Materials Project is a large computational materials database for crystal structures, thermodynamic properties, electronic structure, magnetic and mechanical properties, synthesis information, provenance, and related materials metadata.
 
@@ -73,6 +75,8 @@ Official website: [aflow.org](https://aflow.org/)
 Local Source: [AFLOW](./document/dft/aflow.md)
 
 #### Alexandria (AMD)
+
+<img src="./Figure/alexandria_logo.png" alt="logo" style="height:3em;">
 
 Alexandria is an open high-throughput database of DFT-relaxed inorganic crystals, with PBE, PBEsol, and SCAN geometries, convex hulls, phonons, benchmarks, and the generative models trained on them. The adapter streams the bulk `*.json.bz2` archives entry by entry and can also query the OPTIMADE API on demand.
 
