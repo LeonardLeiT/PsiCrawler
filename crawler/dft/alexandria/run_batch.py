@@ -126,11 +126,13 @@ def _run_primary(config: AlexandriaConfig, dataset, args, logger, manifest) -> d
                     logger.exception("[ERROR] %s: %s", mat_id, name)
         except Exception as error:
             stats["file_errors"] += 1
+            file_parse_error = True
             append_manifest_item(manifest, {"file": name, "status": "failed", "error": f"parse: {error}"})
             logger.exception("[PARSE ERROR] %s", name)
         logger.info("[FILE] %s records=%d success=%d failed=%d", name, file_records, file_success, file_failed)
         append_manifest_item(manifest, {
-            "file": name, "status": "partial" if file_failed else "success",
+            "file": name,
+            "status": "failed" if file_parse_error else ("partial" if file_failed else "success"),
             "records": file_records, "success": file_success, "failed": file_failed,
         })
         if reached_limit:
