@@ -1,0 +1,5 @@
+# OpenAlex field mapping placeholder.
+source: openalex
+standard: papers
+schema_version: "0.1"
+mapping: {}

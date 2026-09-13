@@ -1,16 +1,25 @@
-"""AFLOW source adapter for PsiCrawler."""
+"""AFLOW raw download source."""
 
-from .client import AflowClient
-from .config import AflowConfig
-from .extractor import AflowExtractionReport, extract_single
-from .normalize import normalize_aflow
-from .storage import AflowStorage
+from .download import (
+    DEFAULT_AURL,
+    DEFAULT_PROFILE,
+    AflowConfig,
+    AflowDownloadResult,
+    build_filter_query,
+    completed,
+    download_one,
+    fetch_aurl_list,
+    read_aurls_file,
+)
 
 __all__ = [
-    "AflowClient",
     "AflowConfig",
-    "AflowExtractionReport",
-    "AflowStorage",
-    "extract_single",
-    "normalize_aflow",
+    "AflowDownloadResult",
+    "DEFAULT_AURL",
+    "DEFAULT_PROFILE",
+    "build_filter_query",
+    "completed",
+    "download_one",
+    "fetch_aurl_list",
+    "read_aurls_file",
 ]

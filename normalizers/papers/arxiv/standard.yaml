@@ -1,0 +1,49 @@
+schema_name: papers
+schema_version: "0.1"
+description: Placeholder paper metadata contract. Fields are refined per source as adapters are implemented.
+
+fields:
+  source:
+    type: string
+    nullable: false
+    description: Name of the upstream paper database or provider.
+  source_id:
+    type: string
+    nullable: false
+    description: Stable identifier assigned by the upstream source.
+  source_url:
+    type: string
+    nullable: true
+    description: Canonical URL of the upstream record.
+  title:
+    type: string
+    nullable: true
+    description: Title of the work.
+  abstract:
+    type: string
+    nullable: true
+    description: Abstract text when provided by the source.
+  authors:
+    type: array
+    nullable: true
+    description: Ordered list of author names or identifiers.
+  doi:
+    type: string
+    nullable: true
+    description: Digital Object Identifier when available.
+  published_at:
+    type: string
+    nullable: true
+    description: Publication or preprint date supplied by the source.
+  raw_path:
+    type: string
+    nullable: true
+    description: Local path to the raw source record.
+  schema_version:
+    type: string
+    nullable: false
+    description: Version of the paper schema used for this record.
+  content_hash:
+    type: string
+    nullable: true
+    description: SHA-256 of the canonical raw source document.

@@ -1,8 +1,14 @@
 # HTTP client used by source adapters
 requests>=2.31
 
-# Materials Project reference scripts and pymatgen structure handling
-mp-api>=0.45
-pymatgen>=2024.1
+# Materials Project API and pymatgen / emmet data objects
+mp-api>=0.46
+pymatgen>=2026.5
+emmet-core>=0.87
+monty>=2024.2
+
+# YAML standard contracts and source mappings
 PyYAML>=6.0
+
+# Environment configuration
 python-dotenv>=1.0

@@ -1,0 +1,135 @@
+source: aflow
+standard: dft
+schema_version: "3.0"
+
+# AFLOW exposes a large source-specific metadata model. These fields are
+# preserved in aflowlib.json and are progressively mapped into standard.yaml.
+# This is a curated legacy subset, NOT the official inventory or fetch limit.
+source_fields:
+  - auid
+  - aurl
+  - catalog
+  - data_api
+  - data_source
+  - compound
+  - prototype
+  - nspecies
+  - natoms
+  - density
+  - species
+  - composition
+  - stoichiometry
+  - geometry
+  - volume_cell
+  - volume_atom
+  - spacegroup_orig
+  - spacegroup_relax
+  - crystal_family
+  - crystal_system
+  - crystal_class
+  - point_group_Hermann_Mauguin
+  - energy_cell
+  - energy_atom
+  - enthalpy_formation_atom
+  - Egap
+  - Egap_type
+  - pressure
+  - stress_tensor
+  - ael_bulk_modulus_vrh
+  - ael_shear_modulus_vrh
+  - ael_youngs_modulus_vrh
+  - ael_poisson_ratio
+  - ael_debye_temperature
+  - agl_debye
+  - agl_thermal_conductivity_300K
+  - agl_thermal_expansion_300K
+  - spin_cell
+  - spin_atom
+  - spinD
+  - bader_net_charges
+  - bader_atomic_volumes
+  - code
+  - dft_type
+  - energy_cutoff
+  - calculation_time
+  - calculation_memory
+  - calculation_cores
+  - aflow_version
+  - aflowlib_version
+  - aflowlib_date
+
+mapping:
+  source: {value: aflow}
+  requested_id: {transform: requested_id}
+  source_id: {field: auid}
+  source_url: {field: aurl}
+  formula: {field: compound}
+  formula_reduced: {field: formula_reduced}
+  chemical_system: {field: chemical_system}
+  elements: {field: elements}
+  element_count: {field: element_count}
+  atom_count: {field: natoms}
+  structure: {field: structure}
+  structure_path: {field: structure_path}
+  lattice_a: {field: lattice_a}
+  lattice_b: {field: lattice_b}
+  lattice_c: {field: lattice_c}
+  angle_alpha: {field: angle_alpha}
+  angle_beta: {field: angle_beta}
+  angle_gamma: {field: angle_gamma}
+  density: {field: density}
+  density_atomic: {field: density_atomic}
+  volume: {field: volume_cell}
+  crystal_system: {field: crystal_system, transform: lowercase}
+  spacegroup_number: {field: spacegroup_number}
+  spacegroup_symbol: {field: spacegroup_symbol}
+  point_group: {field: point_group}
+  total_energy: {field: energy_cell}
+  energy_per_atom: {field: energy_atom}
+  uncorrected_energy_per_atom: {field: energy_atom}
+  formation_energy: {field: formation_energy}
+  formation_energy_per_atom: {field: formation_energy_per_atom}
+  band_gap: {field: Egap}
+  fermi_level: {field: fermi_level}
+  band_gap_type: {field: Egap_type}
+  is_metal: {field: is_metal}
+  is_gap_direct: {field: is_gap_direct}
+  calculation_method: {field: calculation_method}
+  code: {field: code}
+  code_version: {field: code_version}
+  functional: {field: functional}
+  kpoint_mesh: {field: kpoint_mesh}
+  energy_cutoff: {field: energy_cutoff}
+  pressure: {field: pressure, transform: kbar_to_gpa}
+  total_magnetization: {field: total_magnetization}
+  magnetization_per_atom: {field: magnetization_per_atom}
+  magnetic_moments: {field: magnetic_moments}
+  magnetic_site_count: {field: magnetic_site_count}
+  bulk_modulus_vrh: {field: bulk_modulus_vrh}
+  shear_modulus_vrh: {field: shear_modulus_vrh}
+  youngs_modulus: {field: ael_youngs_modulus_vrh}
+  poisson_ratio: {field: ael_poisson_ratio}
+  elastic_anisotropy: {field: ael_elastic_anisotropy}
+  debye_temperature: {field: debye_temperature}
+  thermal_conductivity: {field: agl_thermal_conductivity_300K}
+  band_structure_path: {field: band_structure_path}
+  dos_path: {field: dos_path}
+  bandstructure_summary: {field: bandstructure_summary}
+  dos_summary: {field: dos_summary}
+  property_paths: {field: property_paths}
+  elastic_tensor_path: {field: elastic_tensor_path}
+  phonon_band_structure_path: {field: phonon_band_structure_path}
+  phonon_dos_path: {field: phonon_dos_path}
+  is_magnetic: {field: is_magnetic}
+  formula_anonymous: {field: formula_anonymous}
+  possible_species: {field: possible_species}
+  composition_reduced: {field: composition_reduced}
+  last_updated: {field: last_updated}
+  updated_at: {field: updated_at}
+  schema_version: {value: "3.0"}
+  api_version: {value: aflowlib}
+  retrieved_at: {transform: now}
+  bulk_modulus_voigt: {field: ael_bulk_modulus_voigt}
+  bulk_modulus_reuss: {field: ael_bulk_modulus_reuss}
+  shear_modulus_voigt: {field: ael_shear_modulus_voigt}
+  shear_modulus_reuss: {field: ael_shear_modulus_reuss}

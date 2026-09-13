@@ -1,0 +1,5 @@
+# Crossref field mapping placeholder.
+source: crossref
+standard: papers
+schema_version: "0.1"
+mapping: {}

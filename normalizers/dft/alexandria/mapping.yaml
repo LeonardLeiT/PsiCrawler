@@ -1,0 +1,59 @@
+source: alexandria
+standard: dft
+schema_version: "3.0"
+
+source_extra_exclude:
+  - _requested_id
+  - _origin
+  - dataset_url
+  - structure_path
+
+mapping:
+  source: {value: alexandria}
+  requested_id: {transform: requested_id}
+  source_id: {field: source_id}
+  source_url: {field: source_url}
+  formula: {field: formula}
+  formula_reduced: {field: formula_reduced, transform: normalize_formula}
+  formula_anonymous: {field: formula_anonymous}
+  chemical_system: {field: chemical_system, transform: normalize_chemical_system}
+  elements: {field: elements, transform: normalize_elements}
+  element_count: {field: elements, transform: count_items}
+  composition_reduced: {field: composition_reduced}
+  structure: {field: structure}
+  lattice_a: {field: lattice_a}
+  lattice_b: {field: lattice_b}
+  lattice_c: {field: lattice_c}
+  angle_alpha: {field: angle_alpha}
+  angle_beta: {field: angle_beta}
+  angle_gamma: {field: angle_gamma}
+  volume: {field: volume}
+  density: {field: density}
+  density_atomic: {field: density_atomic}
+  atom_count: {field: atom_count, transform: to_int}
+  crystal_system: {field: crystal_system, transform: lowercase}
+  spacegroup_number: {field: spacegroup_number, transform: to_int}
+  spacegroup_symbol: {field: spacegroup_symbol}
+  point_group: {field: point_group}
+  calculation_method: {field: calculation_method}
+  functional: {field: functional}
+  total_energy: {field: total_energy}
+  energy_per_atom: {field: energy_per_atom}
+  formation_energy: {field: formation_energy}
+  formation_energy_per_atom: {field: formation_energy_per_atom}
+  energy_above_hull: {field: energy_above_hull}
+  band_gap: {field: band_gap}
+  band_gap_type: {field: band_gap_type}
+  is_metal: {field: is_metal, transform: to_bool}
+  is_gap_direct: {field: is_gap_direct, transform: to_bool}
+  total_magnetization: {field: total_magnetization}
+  magnetization_per_atom: {field: magnetization_per_atom}
+  magnetic_site_count: {field: magnetic_site_count, transform: to_int}
+  magnetic_moments: {field: magnetic_moments}
+  is_magnetic: {field: is_magnetic, transform: to_bool}
+  decomposes_to: {field: decomposes_to, transform: parse_decomposition}
+  last_updated: {field: last_updated}
+  schema_version: {value: "3.0"}
+  api_version: {field: api_version}
+  property_paths: {field: property_paths}
+  retrieved_at: {transform: now}
