@@ -21,7 +21,7 @@ from sources.dft.alexandria.download import (
     completed,
     download_file,
     get_dataset,
-    iter_dataset_entries,
+    iter_entries,
     list_remote_files,
     source_id_for,
 )
@@ -40,6 +40,8 @@ def _run_download_only(config: AlexandriaConfig, dataset, logger, manifest, max_
     files = list_remote_files(dataset, config)
     if max_files is not None:
         files = files[:max_files]
+    if not files:
+        logger.warning("[EMPTY] no files found for dataset %s", dataset.name)
     stats = {"files": len(files), "downloaded": 0, "failed": 0}
     for index, filename in enumerate(files, start=1):
         try:
@@ -54,72 +56,85 @@ def _run_download_only(config: AlexandriaConfig, dataset, logger, manifest, max_
 
 
 def _run_primary(config: AlexandriaConfig, dataset, args, logger, manifest) -> dict:
-    """Stream, normalize, and index a primary entry dataset."""
+    """Stream, normalize, and index a primary entry dataset.
+
+    Each archive is downloaded and parsed independently, so one bad file is
+    recorded and the run continues with the remaining files.
+    """
     dataset_url = _dataset_url(dataset)
     structure_root = config.data_root / "structure"
-    stats = {"records": 0, "success": 0, "failed": 0, "skipped": 0, "files": 0}
-    current_file: str | None = None
-    file_records = 0
-    file_success = 0
-    file_failed = 0
-
-    def flush_file() -> None:
-        nonlocal file_records, file_success, file_failed
-        if current_file is not None:
-            logger.info("[FILE] %s records=%d success=%d failed=%d", current_file, file_records, file_success, file_failed)
-            append_manifest_item(manifest, {
-                "file": current_file, "status": "partial" if file_failed else "success",
-                "records": file_records, "success": file_success, "failed": file_failed,
-            })
-        file_records = file_success = file_failed = 0
-
-    for item in iter_dataset_entries(
-        dataset, config, max_files=args.max_files, max_records=args.max_records, logger=logger,
-    ):
-        filename = item["file"]
-        if filename != current_file:
-            flush_file()
-            current_file = filename
-            stats["files"] += 1
-        stats["records"] += 1
-        file_records += 1
-        entry = item["entry"]
-        data = entry.get("data") if isinstance(entry.get("data"), dict) else {}
-        mat_id = data.get("mat_id")
-        if mat_id is None:
-            stats["failed"] += 1
-            file_failed += 1
-            append_manifest_item(manifest, {"file": filename, "index": item["index"], "status": "failed", "error": "missing mat_id"})
-            continue
-        if not args.no_resume and completed(config.database_path, dataset.name, mat_id):
-            stats["skipped"] += 1
-            continue
+    stats = {"files": 0, "file_errors": 0, "records": 0, "success": 0, "failed": 0, "skipped": 0}
+    files = list_remote_files(dataset, config)
+    if args.max_files is not None:
+        files = files[:args.max_files]
+    if not files:
+        logger.warning("[EMPTY] no files found for dataset %s", dataset.name)
+    reached_limit = False
+    for filename in files:
+        name = Path(filename).name
         try:
-            record = normalize_alexandria_entry(
-                entry,
-                dataset=dataset.name,
-                dataset_url=dataset_url,
-                functional=dataset.functional,
-                dimensionality=dataset.dimensionality,
-                structure_root=structure_root,
-                raw_path=item["raw_path"],
-            )
-            record["raw_path"] = item["raw_path"]
-            record["source_documents"] = {"dataset": dataset.name, "file": filename, "entry_index": item["index"]}
-            record["download_status"] = "success"
-            record["properties_requested"] = False
-            storage.save(config.database_path, record, entry, columns=field_names(), index_fields=INDEX_FIELDS)
-            stats["success"] += 1
-            file_success += 1
+            local = download_file(dataset, filename, config, logger=logger)
         except Exception as error:
-            stats["failed"] += 1
-            file_failed += 1
-            append_manifest_item(manifest, {
-                "source_id": source_id_for(dataset.name, mat_id), "file": filename,
-                "index": item["index"], "status": "failed", "error": str(error),
-            })
-            logger.exception("[ERROR] %s: %s", mat_id, filename)
-    flush_file()
+            stats["file_errors"] += 1
+            append_manifest_item(manifest, {"file": name, "status": "failed", "error": str(error)})
+            logger.exception("[FILE ERROR] %s", name)
+            continue
+        stats["files"] += 1
+        file_records = file_success = file_failed = 0
+        file_parse_error = False
+        try:
+            for index, entry in enumerate(iter_entries(local)):
+                if args.max_records is not None and stats["records"] >= args.max_records:
+                    reached_limit = True
+                    break
+                stats["records"] += 1
+                file_records += 1
+                data = entry.get("data") if isinstance(entry.get("data"), dict) else {}
+                mat_id = data.get("mat_id")
+                if mat_id is None:
+                    stats["failed"] += 1
+                    file_failed += 1
+                    append_manifest_item(manifest, {"file": name, "index": index, "status": "failed", "error": "missing mat_id"})
+                    continue
+                if not args.no_resume and completed(config.database_path, dataset.name, mat_id):
+                    stats["skipped"] += 1
+                    continue
+                try:
+                    record = normalize_alexandria_entry(
+                        entry,
+                        dataset=dataset.name,
+                        dataset_url=dataset_url,
+                        functional=dataset.functional,
+                        dimensionality=dataset.dimensionality,
+                        structure_root=structure_root,
+                        raw_path=str(local),
+                    )
+                    record["raw_path"] = str(local)
+                    record["source_documents"] = {"dataset": dataset.name, "file": name, "entry_index": index}
+                    record["download_status"] = "success"
+                    record["properties_requested"] = False
+                    storage.save(config.database_path, record, entry, columns=field_names(), index_fields=INDEX_FIELDS)
+                    stats["success"] += 1
+                    file_success += 1
+                except Exception as error:
+                    stats["failed"] += 1
+                    file_failed += 1
+                    append_manifest_item(manifest, {
+                        "source_id": source_id_for(dataset.name, mat_id), "file": name,
+                        "index": index, "status": "failed", "error": str(error),
+                    })
+                    logger.exception("[ERROR] %s: %s", mat_id, name)
+        except Exception as error:
+            stats["file_errors"] += 1
+            append_manifest_item(manifest, {"file": name, "status": "failed", "error": f"parse: {error}"})
+            logger.exception("[PARSE ERROR] %s", name)
+        logger.info("[FILE] %s records=%d success=%d failed=%d", name, file_records, file_success, file_failed)
+        append_manifest_item(manifest, {
+            "file": name, "status": "partial" if file_failed else "success",
+            "records": file_records, "success": file_success, "failed": file_failed,
+        })
+        if reached_limit:
+            break
     return stats
 
 
@@ -155,10 +170,15 @@ def main() -> None:
     )
     logger = create_logger("crawler.alexandria.batch", config.data_root / "logs", run_id=manifest["run_id"])
     logger.info("[START] dataset=%s primary=%s", dataset.name, dataset.is_primary)
-    if args.download_only or not dataset.is_primary:
-        stats = _run_download_only(config, dataset, logger, manifest, args.max_files)
-    else:
-        stats = _run_primary(config, dataset, args, logger, manifest)
+    try:
+        if args.download_only or not dataset.is_primary:
+            stats = _run_download_only(config, dataset, logger, manifest, args.max_files)
+        else:
+            stats = _run_primary(config, dataset, args, logger, manifest)
+    except Exception as error:
+        logger.exception("[FATAL] dataset=%s", dataset.name)
+        finish_manifest(manifest, {"status": "failed", "error": str(error)})
+        raise
     finish_manifest(manifest, stats)
     logger.info("completed run_id=%s %s", manifest["run_id"], stats)
 

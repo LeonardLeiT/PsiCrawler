@@ -22,6 +22,9 @@ from normalizers.dft import fill_derived_pairs
 STANDARD_PATH = Path(__file__).resolve().parents[1] / "standard.yaml"
 MAPPING_PATH = Path(__file__).resolve().parent / "mapping.yaml"
 
+# Magnetization below this (in Bohr magneton) is treated as numerical noise.
+MAGNETIC_TOLERANCE = 1e-3
+
 
 def load_yaml(path: str | Path) -> dict[str, Any]:
     """Load a YAML schema or mapping document."""
@@ -235,7 +238,7 @@ def _gap_fields(band_gap: Any, direct_gap: Any) -> tuple[float | None, bool | No
 def _count_magnetic_sites(moments: Any) -> int | None:
     if not isinstance(moments, list):
         return None
-    return sum(1 for value in moments if value is not None and abs(float(value)) > 1e-8)
+    return sum(1 for value in moments if value is not None and abs(float(value)) > MAGNETIC_TOLERANCE)
 
 
 def _composition_fields(structure: Any) -> dict[str, Any]:
@@ -360,7 +363,7 @@ def enrich_entry(document: dict[str, Any], dataset: str, *, dataset_url: str | N
         "total_magnetization": total_mag,
         "magnetic_moments": magmom,
         "magnetic_site_count": _count_magnetic_sites(magmom),
-        "is_magnetic": (abs(float(total_mag)) > 1e-8) if total_mag is not None else None,
+        "is_magnetic": (abs(float(total_mag)) > MAGNETIC_TOLERANCE) if total_mag is not None else None,
         "decomposes_to": data.get("decomposition"),
         "dos_ef": data.get("dos_ef"),
         "energy_corrected": data.get("energy_corrected"),
@@ -425,7 +428,7 @@ def enrich_optimade(document: dict[str, Any], dataset: str, *, functional: str |
         "total_magnetization": total_mag,
         "magnetic_moments": magmom,
         "magnetic_site_count": _count_magnetic_sites(magmom),
-        "is_magnetic": (abs(float(total_mag)) > 1e-8) if total_mag is not None else None,
+        "is_magnetic": (abs(float(total_mag)) > MAGNETIC_TOLERANCE) if total_mag is not None else None,
         "decomposes_to": document.get("_alexandria_decomposition"),
         "dos_ef": document.get("_alexandria_dos_ef"),
         "energy_corrected": document.get("_alexandria_energy_corrected"),
