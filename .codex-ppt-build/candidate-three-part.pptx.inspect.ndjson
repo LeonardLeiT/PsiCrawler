@@ -1,0 +1,36 @@
+{"kind":"deck","id":"pr/sfu3ae","name":"Deck"}
+{"kind":"layout","layoutId":"a0299ad6-1192-48bf-8d3c-144ee0bf699a","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"864b29cf-f63a-404d-b4e8-add68a29d328","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/l4rxst","slide":1,"title":"PsiCrawler 项目周报","textShapes":23}
+{"kind":"shape","id":"sh/lgb2dkfq","slide":1,"bbox":[66,38,54,5]}
+{"kind":"textbox","id":"sh/yd0ji5wz","slide":1,"text":"PsiCrawler 项目周报","textPreview":"PsiCrawler 项目周报","textChars":15,"textLines":1,"bbox":[66,55,700,55]}
+{"kind":"textbox","id":"sh/ze9kbaxk","slide":1,"text":"本周进展与后续计划   2026.09.09 至 09.18","textPreview":"本周进展与后续计划   2026.09.09 至 09.18","textChars":30,"textLines":1,"bbox":[840,67,370,30]}
+{"kind":"shape","id":"sh/8j21oze1","slide":1,"bbox":[66,116,1144,1]}
+{"kind":"textbox","id":"sh/tkb2h4fm","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[66,143,70,48]}
+{"kind":"textbox","id":"sh/mhkjmpwb","slide":1,"text":"PsiCrawler 是什么","textPreview":"PsiCrawler 是什么","textChars":14,"textLines":1,"bbox":[150,145,230,42]}
+{"kind":"textbox","id":"sh/7itkfuxw","slide":1,"text":"PsiCrawler 面向公开科研数据，负责批量采集、标准化、存储与检索。当前聚焦 DFT 数据库：保留各数据源的接口与文件差异，同时用统一 schema 描述材料结构、计算性质、数据文件和溯源信息。","textPreview":"PsiCrawler 面向公开科研数据，负责批量采集、标准化、存储与检索。当前聚焦 DFT 数据库：保留各数据源的接口与文件差异，同时用统一 schema 描述材料结构、计算性质、数据文件和溯源信息。","textChars":100,"textLines":1,"bbox":[410,139,790,87]}
+{"kind":"shape","id":"sh/g72lszed","slide":1,"bbox":[150,241,1060,1]}
+{"kind":"textbox","id":"sh/h8v2l4fy","slide":1,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[66,272,70,48]}
+{"kind":"textbox","id":"sh/50n69c3i","slide":1,"text":"当下的进度","textPreview":"当下的进度","textChars":5,"textLines":1,"bbox":[150,274,230,42]}
+{"kind":"textbox","id":"sh/4zep072x","slide":1,"text":"已完成 Materials Project、AFLOW、Alexandria 和 Materials Cloud 四个数据源适配。现有流程覆盖单条与批量采集、分页或流式下载、字段映射、结构标准化、原始文件与 CIF 存储，以及 SQLite 索引。","textPreview":"已完成 Materials Project、AFLOW、Alexandria 和 Materials Cloud 四个数据源适配。现有流程覆盖单条与批量采集、分页或流式下载、字段映射、结构标准化、原始文件与 CIF 存储，以及 SQLite 索引。","textChars":124,"textLines":1,"bbox":[410,267,790,77]}
+{"kind":"shape","id":"sh/jy5o72lc","slide":1,"bbox":[410,363,790,82]}
+{"kind":"textbox","id":"sh/ixw7yx47","slide":1,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[438,376,66,43]}
+{"kind":"textbox","id":"sh/to7qdc3u","slide":1,"text":"已接入数据源","textPreview":"已接入数据源","textChars":6,"textLines":1,"bbox":[500,383,150,30]}
+{"kind":"shape","id":"sh/s3ep4729","slide":1,"bbox":[664,378,1,49]}
+{"kind":"textbox","id":"sh/r258b2lo","slide":1,"text":"115","textPreview":"115","textChars":3,"textLines":1,"bbox":[693,376,88,43]}
+{"kind":"textbox","id":"sh/61w72hk3","slide":1,"text":"统一字段","textPreview":"统一字段","textChars":4,"textLines":1,"bbox":[782,383,110,30]}
+{"kind":"shape","id":"sh/9s361s3a","slide":1,"bbox":[923,378,1,49]}
+{"kind":"textbox","id":"sh/87upsnmp","slide":1,"text":"3.0","textPreview":"3.0","textChars":3,"textLines":1,"bbox":[953,376,78,43]}
+{"kind":"textbox","id":"sh/0byp8nul","slide":1,"text":"DFT schema","textPreview":"DFT schema","textChars":10,"textLines":1,"bbox":[1035,383,130,30]}
+{"kind":"textbox","id":"sh/lc7qhsb6","slide":1,"text":"Materials Project 覆盖 26 个材料接口；Materials Cloud 接入 MC3D 与 MC2D 共 4 个数据集，公开记录约 10.5 万条。","textPreview":"Materials Project 覆盖 26 个材料接口；Materials Cloud 接入 MC3D 与 MC2D 共 4 个数据集，公开记录约 10.5 万条。","textChars":84,"textLines":1,"bbox":[410,459,790,44]}
+{"kind":"shape","id":"sh/y9w76dcv","slide":1,"bbox":[150,515,1060,1]}
+{"kind":"textbox","id":"sh/zapofit0","slide":1,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[66,545,70,48]}
+{"kind":"textbox","id":"sh/8fypcnux","slide":1,"text":"进一步发展","textPreview":"进一步发展","textChars":5,"textLines":1,"bbox":[150,547,230,42]}
+{"kind":"textbox","id":"sh/9g7qlsbi","slide":1,"text":"近期","textPreview":"近期","textChars":2,"textLines":1,"bbox":[410,544,72,30]}
+{"kind":"textbox","id":"sh/mdg7axcr","slide":1,"text":"扩大代表性样本回归测试，重点校验字段映射、单位、空值和跨源一致性；完善断点恢复、访问限速与大文件处理。","textPreview":"扩大代表性样本回归测试，重点校验字段映射、单位、空值和跨源一致性；完善断点恢复、访问限速与大文件处理。","textChars":51,"textLines":1,"bbox":[490,540,710,55]}
+{"kind":"textbox","id":"sh/nep8j2tc","slide":1,"text":"下一阶段","textPreview":"下一阶段","textChars":4,"textLines":1,"bbox":[410,611,88,30]}
+{"kind":"textbox","id":"sh/wjipg7ut","slide":1,"text":"推进 OQMD 接入，并将统一框架扩展到论文、科学数据集与实验记录，逐步形成跨数据源关联检索能力。","textPreview":"推进 OQMD 接入，并将统一框架扩展到论文、科学数据集与实验记录，逐步形成跨数据源关联检索能力。","textChars":49,"textLines":1,"bbox":[510,607,690,55]}
+{"kind":"shape","id":"sh/x4rqpcbe","slide":1,"bbox":[66,683,1144,1]}
+{"kind":"textbox","id":"sh/7ytsf6dg","slide":1,"text":"数据使用需遵守来源许可、引用要求和 API 速率限制","textPreview":"数据使用需遵守来源许可、引用要求和 API 速率限制","textChars":26,"textLines":1,"bbox":[66,692,700,20]}
+{"kind":"textbox","id":"sh/6xkrm1wb","slide":1,"text":"PsiCrawler","textPreview":"PsiCrawler","textChars":10,"textLines":1,"bbox":[1060,692,150,20]}
+{"kind":"notes","id":"nt/l4rxst","slide":1,"text":"内容依据本地仓库 README_zh.md、document/dft/overview.md、document/dft/materialscloud.md、normalizers/dft/standard.yaml 及当前模块整理。统计日期：2026-09-18。Materials Cloud 约 10.5 万条为文档中四个数据集记录数之和的近似值。代码目录 core、crawler、sources、normalizers、tests 已通过本地 compileall 语法检查。"}

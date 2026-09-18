@@ -11,6 +11,7 @@ PsiCrawler 是一个用于科研数据采集、标准化、存储和检索的项
 
 ## 🔥 最新进展
 
+- 2026-09-16：新增 Materials Cloud 适配器，支持 MC3D（PBE/PBEsol）和 MC2D 的 OPTIMADE 分页采集、精选归档批量包下载、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-13：新增 Alexandria (AMD) 适配器，支持流式批量 JSON.bz2 采集、OPTIMADE 按需查询、数据集命名空间标识符、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-10：新增基于 schema 驱动的 Materials Project 适配器，支持数据源专用 API、26 个材料接口、完整 Summary 字段采集、按接口查询、CIF 导出、标准化记录和 SQLite 索引。
 - 2026-09-10：新增 AFLOW 适配器，支持分类原始数据存储、标准化 DFT 记录、性质路径记录和 SQLite 索引。
@@ -83,6 +84,16 @@ Alexandria 是一个开放的高通量 DFT 无机晶体数据库，包含 PBE、
 官方网站：[alexandria.icams.rub.de](https://alexandria.icams.rub.de/)
 
 本地数据源说明：[Alexandria](./document/dft/alexandria.md)
+
+#### Materials Cloud
+
+<img src="./Figure/materialscloud_logo.svg" alt="logo" style="height:3em;">
+
+Materials Cloud 是一个开放科学平台，托管精选的计算材料数据库，包括三维结构数据库（MC3D）和二维数据库（MC2D）。适配器分页其 OPTIMADE API，并可保留精选归档批量文件。
+
+官方网站：[materialscloud.org](https://www.materialscloud.org/)
+
+本地数据源说明：[Materials Cloud](./document/dft/materialscloud.md)
 
 #### OQMD
 

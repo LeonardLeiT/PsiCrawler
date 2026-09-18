@@ -11,6 +11,7 @@ PsiCrawler is a research data crawling, normalization, storage, and retrieval pr
 
 ## 🔥 Latest Updates
 
+- 2026-09-16 Added a Materials Cloud adapter with OPTIMADE paging for MC3D (PBE/PBEsol) and MC2D, curated archive bulk downloads, normalized DFT records, and SQLite indexing.
 - 2026-09-13 Added an Alexandria (AMD) adapter with streamed bulk JSON.bz2 ingestion, OPTIMADE on-demand queries, dataset-namespaced identifiers, normalized DFT records, and SQLite indexing.
 - 2026-09-10 Added a schema-driven Materials Project adapter with source-specific API access, 26 material routes, complete Summary capture, route-specific queries, CIF export, normalized records, and SQLite indexing.
 - 2026-09-10 Added an AFLOW adapter with categorized raw storage, normalized DFT records, property-path tracking, and SQLite indexing.
@@ -83,6 +84,16 @@ Alexandria is an open high-throughput database of DFT-relaxed inorganic crystals
 Official website: [alexandria.icams.rub.de](https://alexandria.icams.rub.de/)
 
 Local Source: [Alexandria](./document/dft/alexandria.md)
+
+#### Materials Cloud
+
+<img src="./Figure/materialscloud_logo.svg" alt="logo" style="height:3em;">
+
+Materials Cloud is an open-science platform hosting curated computational materials databases, including the 3D structure database (MC3D) and the 2D database (MC2D). The adapter pages their OPTIMADE APIs and can preserve the curated archive bulk artifacts.
+
+Official website: [materialscloud.org](https://www.materialscloud.org/)
+
+Local Source: [Materials Cloud](./document/dft/materialscloud.md)
 
 #### OQMD
 

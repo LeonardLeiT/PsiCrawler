@@ -1,0 +1,46 @@
+{"kind":"deck","id":"pr/yvolsk","name":"Deck"}
+{"kind":"layout","layoutId":"0fcb5cca-094a-49a0-81a5-e01123c3d0ab","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"ce3ae829-4b7c-4497-80d4-52c4e0f08953","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/g4qeir","slide":1,"title":"WEEKLY REPORT","textShapes":28}
+{"kind":"shape","id":"sh/w7a5sjat","slide":1,"bbox":[0,0,414,720]}
+{"kind":"shape","id":"sh/v61ozet8","slide":1,"bbox":[44,42,54,6]}
+{"kind":"textbox","id":"sh/a58nq9sn","slide":1,"text":"WEEKLY REPORT","textPreview":"WEEKLY REPORT","textChars":13,"textLines":1,"bbox":[44,59,240,28]}
+{"kind":"textbox","id":"sh/5cj658ba","slide":1,"text":"PsiCrawler\n项目周报","textPreview":"PsiCrawler | 项目周报","textChars":15,"textLines":2,"bbox":[44,99,326,118]}
+{"kind":"textbox","id":"sh/kba5w3ap","slide":1,"text":"公开科研数据的采集、标准化与可检索存储","textPreview":"公开科研数据的采集、标准化与可检索存储","textChars":19,"textLines":1,"bbox":[44,228,314,52]}
+{"kind":"textbox","id":"sh/ja1o3yt4","slide":1,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[44,315,98,80]}
+{"kind":"textbox","id":"sh/i9snutsj","slide":1,"text":"个 DFT 数据源已接入","textPreview":"个 DFT 数据源已接入","textChars":12,"textLines":1,"bbox":[132,338,225,34]}
+{"kind":"shape","id":"sh/tg3698b6","slide":1,"bbox":[44,399,300,1]}
+{"kind":"textbox","id":"sh/sfu503a1","slide":1,"text":"115","textPreview":"115","textChars":3,"textLines":1,"bbox":[44,420,118,66]}
+{"kind":"textbox","id":"sh/ahwzmpob","slide":1,"text":"统一字段","textPreview":"统一字段","textChars":4,"textLines":1,"bbox":[156,435,180,30]}
+{"kind":"textbox","id":"sh/bi50vu5w","slide":1,"text":"Schema 3.0 统一跨源数据语义","textPreview":"Schema 3.0 统一跨源数据语义","textChars":19,"textLines":1,"bbox":[44,486,300,40]}
+{"kind":"textbox","id":"sh/c3ehoz6h","slide":1,"text":"本周形成完整链路","textPreview":"本周形成完整链路","textChars":8,"textLines":1,"bbox":[44,570,280,28]}
+{"kind":"textbox","id":"sh/x4nixkn2","slide":1,"text":"下载与分页采集  /  字段映射与结构标准化\nCIF 与原始文件存储  /  SQLite 索引与文档示例","textPreview":"下载与分页采集  /  字段映射与结构标准化 | CIF 与原始文件存储  /  SQLite 索引与文档示例","textChars":53,"textLines":2,"bbox":[44,607,320,64]}
+{"kind":"textbox","id":"sh/y5wzqpon","slide":1,"text":"2026.09.09—09.18","textPreview":"2026.09.09—09.18","textChars":16,"textLines":1,"bbox":[44,681,220,22]}
+{"kind":"textbox","id":"sh/z6p0zu58","slide":1,"text":"本周完成：多源 DFT 数据管线从零落地","textPreview":"本周完成：多源 DFT 数据管线从零落地","textChars":20,"textLines":1,"bbox":[458,44,760,50]}
+{"kind":"textbox","id":"sh/k7yhszmd","slide":1,"text":"采集端保留各数据源差异，标准层统一字段、结构与溯源信息","textPreview":"采集端保留各数据源差异，标准层统一字段、结构与溯源信息","textChars":27,"textLines":1,"bbox":[458,94,720,30]}
+{"kind":"shape","id":"sh/l87i14ny","slide":1,"bbox":[458,130,760,2]}
+{"kind":"textbox","id":"sh/falgna5o","slide":1,"text":"Materials Project","textPreview":"Materials Project","textChars":17,"textLines":1,"bbox":[552,151,270,32]}
+{"kind":"textbox","id":"sh/j2hoz2hk","slide":1,"text":"26 个材料接口","textPreview":"26 个材料接口","textChars":8,"textLines":1,"bbox":[916,154,270,28]}
+{"kind":"textbox","id":"sh/ihon6x0z","slide":1,"text":"Schema 驱动采集，支持单条与批量任务、完整 Summary 字段、CIF 导出和 SQLite 索引。","textPreview":"Schema 驱动采集，支持单条与批量任务、完整 Summary 字段、CIF 导出和 SQLite 索引。","textChars":54,"textLines":1,"bbox":[552,186,634,48]}
+{"kind":"shape","id":"sh/54z61cza","slide":1,"bbox":[552,242,634,1]}
+{"kind":"textbox","id":"sh/vex4v2h8","slide":1,"text":"AFLOW","textPreview":"AFLOW","textChars":5,"textLines":1,"bbox":[552,248,270,32]}
+{"kind":"textbox","id":"sh/adon2x0n","slide":1,"text":"分类原始数据","textPreview":"分类原始数据","textChars":6,"textLines":1,"bbox":[916,251,270,28]}
+{"kind":"textbox","id":"sh/xgf6xsze","slide":1,"text":"完成标准记录映射与性质路径留存；XZ 文件下载后自动解压，成功转换后清理压缩包。","textPreview":"完成标准记录映射与性质路径留存；XZ 文件下载后自动解压，成功转换后清理压缩包。","textChars":40,"textLines":1,"bbox":[552,283,634,48]}
+{"kind":"shape","id":"sh/wf6547it","slide":1,"bbox":[552,339,634,1]}
+{"kind":"textbox","id":"sh/e9sneh07","slide":1,"text":"Alexandria","textPreview":"Alexandria","textChars":10,"textLines":1,"bbox":[552,345,270,32]}
+{"kind":"textbox","id":"sh/cf2l8jy9","slide":1,"text":"流式批量采集","textPreview":"流式批量采集","textChars":6,"textLines":1,"bbox":[916,348,270,28]}
+{"kind":"textbox","id":"sh/dgb21ofu","slide":1,"text":"支持 JSON.bz2 流式处理、OPTIMADE 按需查询、数据集命名空间标识符和 SQLite 索引。","textPreview":"支持 JSON.bz2 流式处理、OPTIMADE 按需查询、数据集命名空间标识符和 SQLite 索引。","textChars":53,"textLines":1,"bbox":[552,380,634,48]}
+{"kind":"shape","id":"sh/qdk369gj","slide":1,"bbox":[552,436,634,1]}
+{"kind":"textbox","id":"sh/0jmlc3yl","slide":1,"text":"Materials Cloud","textPreview":"Materials Cloud","textChars":15,"textLines":1,"bbox":[552,442,270,32]}
+{"kind":"textbox","id":"sh/lkv258f6","slide":1,"text":"约 10.5 万条记录","textPreview":"约 10.5 万条记录","textChars":11,"textLines":1,"bbox":[916,445,270,28]}
+{"kind":"textbox","id":"sh/yhk3atgf","slide":1,"text":"接入 MC3D 与 MC2D 共 4 个数据集，支持 OPTIMADE 分页、精选归档批量下载和标准化记录。","textPreview":"接入 MC3D 与 MC2D 共 4 个数据集，支持 OPTIMADE 分页、精选归档批量下载和标准化记录。","textChars":54,"textLines":1,"bbox":[552,477,634,48]}
+{"kind":"shape","id":"sh/zidk3yx0","slide":1,"bbox":[438,558,842,162]}
+{"kind":"shape","id":"sh/8nmlg3yh","slide":1,"bbox":[438,558,9,162]}
+{"kind":"textbox","id":"sh/98v298f2","slide":1,"text":"下周重点","textPreview":"下周重点","textChars":4,"textLines":1,"bbox":[474,580,138,28]}
+{"kind":"textbox","id":"sh/tgn2poji","slide":1,"text":"扩大代表性样本回归测试，核对跨源字段质量；推进 OQMD 适配器与断点恢复测试。","textPreview":"扩大代表性样本回归测试，核对跨源字段质量；推进 OQMD 适配器与断点恢复测试。","textChars":40,"textLines":1,"bbox":[474,615,698,48]}
+{"kind":"textbox","id":"sh/8felg32x","slide":1,"text":"风险提示：上游 API 速率限制与超大归档会影响全量同步，批量任务需保留限速、续传与许可记录。","textPreview":"风险提示：上游 API 速率限制与超大归档会影响全量同步，批量任务需保留限速、续传与许可记录。","textChars":47,"textLines":1,"bbox":[474,674,720,24]}
+{"kind":"image","id":"im/lgjuhgru","slide":1,"name":"","alt":"Materials Project logo","bbox":[458,158,72,52]}
+{"kind":"image","id":"im/by5cv61k","slide":1,"name":"","alt":"AFLOW logo","bbox":[458,255,72,52]}
+{"kind":"image","id":"im/8rydwvid","slide":1,"name":"","alt":"Alexandria logo","bbox":[458,352,72,52]}
+{"kind":"image","id":"im/4z25k36x","slide":1,"name":"","alt":"Materials Cloud logo","bbox":[458,449,72,52]}
+{"kind":"notes","id":"nt/g4qeir","slide":1,"text":"内容依据本地仓库 README_zh.md、document/dft/overview.md、document/dft/materialscloud.md、normalizers/dft/standard.yaml 及当前工作区模块整理。统计日期：2026-09-18。Materials Cloud 约 10.5 万条为文档中四个数据集记录数之和的近似值。语法检查：core、crawler、sources、normalizers、tests compileall 通过。"}
