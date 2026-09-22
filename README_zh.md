@@ -11,6 +11,7 @@ PsiCrawler 是一个用于科研数据采集、标准化、存储和检索的项
 
 ## 🔥 最新进展
 
+- 2026-09-18：新增 NOMAD Archive 适配器，支持原生 API 条目枚举、逐条处理态归档采集、批量 zip 采集、SI 到标准单位换算、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-16：新增 Materials Cloud 适配器，支持 MC3D（PBE/PBEsol）和 MC2D 的 OPTIMADE 分页采集、精选归档批量包下载、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-13：新增 Alexandria (AMD) 适配器，支持流式批量 JSON.bz2 采集、OPTIMADE 按需查询、数据集命名空间标识符、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-10：新增基于 schema 驱动的 Materials Project 适配器，支持数据源专用 API、26 个材料接口、完整 Summary 字段采集、按接口查询、CIF 导出、标准化记录和 SQLite 索引。
@@ -94,6 +95,16 @@ Materials Cloud 是一个开放科学平台，托管精选的计算材料数据�
 官方网站：[materialscloud.org](https://www.materialscloud.org/)
 
 本地数据源说明：[Materials Cloud](./document/dft/materialscloud.md)
+
+#### NOMAD Archive
+
+<img src="./Figure/nomad_logo.svg" alt="logo" style="height:3em;">
+
+NOMAD 是一个开放的 FAIR 数据平台，其公开 Archive 聚合了来自多种计算程序的处理态结果，并镜像了 AFLOW 等外部数据库。适配器通过原生 API 枚举公开条目，逐条抓取处理态归档文档（或批量 zip），将 SI 单位换算到标准契约并索引标准化 DFT 记录。
+
+官方网站：[nomad-lab.eu](https://nomad-lab.eu/)
+
+本地数据源说明：[NOMAD Archive](./document/dft/nomad.md)
 
 #### OQMD
 

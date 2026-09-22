@@ -11,6 +11,7 @@ PsiCrawler is a research data crawling, normalization, storage, and retrieval pr
 
 ## 🔥 Latest Updates
 
+- 2026-09-18 Added a NOMAD Archive adapter with native API entry enumeration, per-entry processed archive ingestion, bulk zip ingestion, SI-to-standard unit conversion, normalized DFT records, and SQLite indexing.
 - 2026-09-16 Added a Materials Cloud adapter with OPTIMADE paging for MC3D (PBE/PBEsol) and MC2D, curated archive bulk downloads, normalized DFT records, and SQLite indexing.
 - 2026-09-13 Added an Alexandria (AMD) adapter with streamed bulk JSON.bz2 ingestion, OPTIMADE on-demand queries, dataset-namespaced identifiers, normalized DFT records, and SQLite indexing.
 - 2026-09-10 Added a schema-driven Materials Project adapter with source-specific API access, 26 material routes, complete Summary capture, route-specific queries, CIF export, normalized records, and SQLite indexing.
@@ -94,6 +95,14 @@ Materials Cloud is an open-science platform hosting curated computational materi
 Official website: [materialscloud.org](https://www.materialscloud.org/)
 
 Local Source: [Materials Cloud](./document/dft/materialscloud.md)
+
+#### NOMAD Archive
+
+NOMAD is an open FAIR data platform whose public Archive aggregates processed computational results from many codes and mirrors external databases such as AFLOW. The adapter enumerates public entries through the native API, fetches each processed archive document (or a bulk zip), converts SI units into the standard contract, and indexes normalized DFT records.
+
+Official website: [nomad-lab.eu](https://nomad-lab.eu/)
+
+Local Source: [NOMAD Archive](./document/dft/nomad.md)
 
 #### OQMD
 

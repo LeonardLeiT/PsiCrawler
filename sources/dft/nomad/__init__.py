@@ -1,0 +1,41 @@
+"""NOMAD Archive raw download source."""
+
+from .download import (
+    API_HOST,
+    API_VERSION,
+    ARCHIVE_REQUIRED,
+    ENTRIES_QUERY_URL,
+    MAX_PAGE_SIZE,
+    CompletionIndex,
+    NomadClient,
+    NomadConfig,
+    NomadError,
+    completed,
+    default_data_root,
+    entry_url,
+    iter_archive_documents,
+    iter_bulk_zip_documents,
+    save_json_atomic,
+    source_id_for,
+    token_from_env,
+)
+
+__all__ = [
+    "API_HOST",
+    "API_VERSION",
+    "ARCHIVE_REQUIRED",
+    "CompletionIndex",
+    "ENTRIES_QUERY_URL",
+    "MAX_PAGE_SIZE",
+    "NomadClient",
+    "NomadConfig",
+    "NomadError",
+    "completed",
+    "default_data_root",
+    "entry_url",
+    "iter_archive_documents",
+    "iter_bulk_zip_documents",
+    "save_json_atomic",
+    "source_id_for",
+    "token_from_env",
+]
