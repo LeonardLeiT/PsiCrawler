@@ -14,7 +14,7 @@ PsiCrawler/
 │
 ├─ document/                        # all documentation
 │  ├─ architecture.md
-│  ├─ dft/{overview,mp,aflow,alexandria,materialscloud,nomad,oqmd}.md
+│  ├─ dft/{overview,mp,aflow,alexandria,materialscloud,nomad,amcsd,oqmd}.md
 │  └─ papers/{overview,arxiv,crossref,openalex}.md
 │
 ├─ sources/                         # raw download only -> data/<domain>/<source>/raw
@@ -23,6 +23,7 @@ PsiCrawler/
 │  ├─ dft/alexandria/download.py
 │  ├─ dft/materialscloud/download.py
 │  ├─ dft/nomad/download.py
+│  ├─ dft/amcsd/download.py
 │  └─ papers/{arxiv,crossref,openalex}/download.py
 │
 ├─ normalizers/                     # standard contract + per-source normalization
@@ -32,17 +33,18 @@ PsiCrawler/
 │  ├─ dft/alexandria/{mapping.yaml,normalize.py}
 │  ├─ dft/materialscloud/{mapping.yaml,normalize.py}
 │  ├─ dft/nomad/{mapping.yaml,normalize.py}
+│  ├─ dft/amcsd/{mapping.yaml,normalize.py}
 │  └─ papers/<source>/{standard.yaml,mapping.yaml,normalize.py}
 │
 ├─ crawler/                         # pipeline: download + normalize + index
-│  ├─ dft/{mp,aflow,alexandria,materialscloud,nomad}/{run_single.py,run_batch.py}
+│  ├─ dft/{mp,aflow,alexandria,materialscloud,nomad,amcsd}/{run_single.py,run_batch.py}
 │  └─ papers/{arxiv,crossref,openalex}/{run_single.py,run_batch.py}
 │
 ├─ core/                            # shared, source-agnostic utilities
 │  ├─ logging.py  manifest.py  storage.py
 │
 ├─ tests/                           # runnable download examples
-│  └─ dft/{mp,aflow,alexandria,materialscloud,nomad}/{extract_single.py,extract_batch.py}
+│  └─ dft/{mp,aflow,alexandria,materialscloud,nomad,amcsd}/{extract_single.py,extract_batch.py}
 │
 └─ data/                            # runtime output (gitignored)
    └─ <domain>/<source>/{raw/<id>/…, index.sqlite}
@@ -107,6 +109,12 @@ python -m crawler.dft.alexandria.run_single agm001010489 --dataset pbesol
 # Limited-sample NOMAD Archive ingestion
 python -m crawler.dft.nomad.run_batch --scope dft --max-records 100
 python -m crawler.dft.nomad.run_single --entry-id=--0TXFv_aZUPi2bqjewWq3CTSGfc
+
+# Limited-sample AMCSD ingestion
+python -m crawler.dft.amcsd.run_batch --max-records 100
+
+# One AMCSD record from the bulk archives
+python -m crawler.dft.amcsd.run_single 0000130
 
 # Run the download examples
 python -m tests.dft.mp.extract_single mp-149

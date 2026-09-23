@@ -11,6 +11,7 @@ PsiCrawler 是一个用于科研数据采集、标准化、存储和检索的项
 
 ## 🔥 最新进展
 
+- 2026-09-23：新增 AMCSD（美国矿物学家晶体结构数据库）适配器，支持官方 CIF/AMC/DIF 批量归档采集、将实验矿物晶体结构标准化到 DFT 契约并写入 SQLite 索引。
 - 2026-09-18：新增 NOMAD Archive 适配器，支持原生 API 条目枚举、逐条处理态归档采集、批量 zip 采集、SI 到标准单位换算、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-16：新增 Materials Cloud 适配器，支持 MC3D（PBE/PBEsol）和 MC2D 的 OPTIMADE 分页采集、精选归档批量包下载、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-13：新增 Alexandria (AMD) 适配器，支持流式批量 JSON.bz2 采集、OPTIMADE 按需查询、数据集命名空间标识符、标准化 DFT 记录和 SQLite 索引。
@@ -105,6 +106,16 @@ NOMAD 是一个开放的 FAIR 数据平台，其公开 Archive 聚合了来自�
 官方网站：[nomad-lab.eu](https://nomad-lab.eu/)
 
 本地数据源说明：[NOMAD Archive](./document/dft/nomad.md)
+
+#### AMCSD
+
+<img src="./Figure/RRUFF_logo.svg" alt="logo" style="height:4em;">
+
+美国矿物学家晶体结构数据库（AMCSD）是由 RRUFF 项目维护的实验晶体结构数据库，面向矿物及矿物学家关注的相关固相。适配器采集官方 CIF、AMC、DIF 批量归档，按 AMCSD 标识符对齐记录，并按实验结构进行标准化。
+
+官方网站：[rruff.net/amcsd](https://www.rruff.net/amcsd/)
+
+本地数据源说明：[AMCSD](./document/dft/amcsd.md)
 
 #### OQMD
 

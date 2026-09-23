@@ -11,6 +11,7 @@ conditions differ.
 - [Alexandria](./alexandria.md) · DFT-relaxed crystals, convex hulls, phonons, PBE/PBEsol/SCAN
 - [Materials Cloud](./materialscloud.md) · curated MC3D and MC2D crystals via OPTIMADE
 - [NOMAD Archive](./nomad.md) · public processed archives via the native API
+- [AMCSD](./amcsd.md) · experimental mineral crystal structures via bulk CIF/AMC/DIF archives (not DFT)
 - [OQMD](./oqmd.md) · thermodynamic and phase-stability data (not implemented)
 
 ## Standard contract
@@ -23,6 +24,7 @@ Every database maps its own raw documents into that contract:
 - Alexandria: [`normalizers/dft/alexandria/`](../../normalizers/dft/alexandria)
 - Materials Cloud: [`normalizers/dft/materialscloud/`](../../normalizers/dft/materialscloud)
 - NOMAD Archive: [`normalizers/dft/nomad/`](../../normalizers/dft/nomad)
+- AMCSD: [`normalizers/dft/amcsd/`](../../normalizers/dft/amcsd)
 
 There is no shared normalization engine: only `standard.yaml` is common to all
 databases, while each source keeps its own `mapping.yaml` and `normalize.py`.

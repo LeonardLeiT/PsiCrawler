@@ -11,6 +11,7 @@ PsiCrawler is a research data crawling, normalization, storage, and retrieval pr
 
 ## 🔥 Latest Updates
 
+- 2026-09-23 Added an AMCSD (American Mineralogist Crystal Structure Database) adapter with official bulk CIF/AMC/DIF archive ingestion, experimental mineral crystal structures normalized into the DFT contract, and SQLite indexing.
 - 2026-09-18 Added a NOMAD Archive adapter with native API entry enumeration, per-entry processed archive ingestion, bulk zip ingestion, SI-to-standard unit conversion, normalized DFT records, and SQLite indexing.
 - 2026-09-16 Added a Materials Cloud adapter with OPTIMADE paging for MC3D (PBE/PBEsol) and MC2D, curated archive bulk downloads, normalized DFT records, and SQLite indexing.
 - 2026-09-13 Added an Alexandria (AMD) adapter with streamed bulk JSON.bz2 ingestion, OPTIMADE on-demand queries, dataset-namespaced identifiers, normalized DFT records, and SQLite indexing.
@@ -103,6 +104,16 @@ NOMAD is an open FAIR data platform whose public Archive aggregates processed co
 Official website: [nomad-lab.eu](https://nomad-lab.eu/)
 
 Local Source: [NOMAD Archive](./document/dft/nomad.md)
+
+#### AMCSD
+
+<img src="./Figure/RRUFF_logo.svg" alt="logo" style="height:3em;">
+
+The American Mineralogist Crystal Structure Database (AMCSD) is an experimental crystal structure database focused on minerals and solids of interest to mineralogists, published by the RRUFF project. The adapter ingests the official bulk CIF, AMC, and DIF archives, aligns records by AMCSD identifier, and normalizes them as experimental structures.
+
+Official website: [rruff.net/amcsd](https://www.rruff.net/amcsd/)
+
+Local Source: [AMCSD](./document/dft/amcsd.md)
 
 #### OQMD
 
