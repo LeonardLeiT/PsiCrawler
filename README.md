@@ -99,6 +99,8 @@ Local Source: [Materials Cloud](./document/dft/materialscloud.md)
 
 #### NOMAD Archive
 
+<img src="./Figure/nomad_logo.svg" alt="logo" style="height:3em;">
+
 NOMAD is an open FAIR data platform whose public Archive aggregates processed computational results from many codes and mirrors external databases such as AFLOW. The adapter enumerates public entries through the native API, fetches each processed archive document (or a bulk zip), converts SI units into the standard contract, and indexes normalized DFT records.
 
 Official website: [nomad-lab.eu](https://nomad-lab.eu/)
