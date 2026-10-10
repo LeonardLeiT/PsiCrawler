@@ -13,6 +13,10 @@ conditions differ.
 - [NOMAD Archive](./nomad.md) · public processed archives via the native API
 - [AMCSD](./amcsd.md) · experimental mineral crystal structures via bulk CIF/AMC/DIF archives (not DFT)
 - [OQMD](./oqmd.md) · thermodynamic and phase-stability data (not implemented)
+- [2DMatPedia](./twodmatpedia.md) · two-dimensional materials from a single JSON Lines database
+- [MatPES](./matpes.md) · PBE and r2SCAN potential-energy-surface calculations (Hugging Face JSON Lines)
+- [QMOF](./qmof.md) · DFT properties for metal-organic frameworks (property table + relaxed CIFs)
+- [Catalysis-Hub](./catalysishub.md) · DFT surface systems via GraphQL (API key)
 
 ## Standard contract
 
@@ -25,6 +29,10 @@ Every database maps its own raw documents into that contract:
 - Materials Cloud: [`normalizers/dft/materialscloud/`](../../normalizers/dft/materialscloud)
 - NOMAD Archive: [`normalizers/dft/nomad/`](../../normalizers/dft/nomad)
 - AMCSD: [`normalizers/dft/amcsd/`](../../normalizers/dft/amcsd)
+- 2DMatPedia: [`normalizers/dft/twodmatpedia/`](../../normalizers/dft/twodmatpedia)
+- MatPES: [`normalizers/dft/matpes/`](../../normalizers/dft/matpes)
+- QMOF: [`normalizers/dft/qmof/`](../../normalizers/dft/qmof)
+- Catalysis-Hub: [`normalizers/dft/catalysishub/`](../../normalizers/dft/catalysishub)
 
 There is no shared normalization engine: only `standard.yaml` is common to all
 databases, while each source keeps its own `mapping.yaml` and `normalize.py`.

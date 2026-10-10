@@ -11,6 +11,10 @@ PsiCrawler 是一个用于科研数据采集、标准化、存储和检索的项
 
 ## 🔥 最新进展
 
+- 2026-10-09：新增 2DMatPedia（二维材料）适配器，整库 JSON Lines 流式采集、标准化 DFT 记录与 SQLite 索引。
+- 2026-10-09：新增 MatPES（势能面数据集）适配器，支持 PBE/r2SCAN 两种泛函的 Hugging Face JSON Lines 流式采集（可用 `HF_ENDPOINT` 指向镜像），标准化 DFT 记录与 SQLite 索引。
+- 2026-10-09：新增 QMOF（金属有机框架量子化学数据库）适配器，采集属性表与弛豫结构归档并逐条关联 CIF，标准化 DFT 记录与 SQLite 索引。
+- 2026-10-09：新增 Catalysis-Hub（表面催化）适配器，通过 GraphQL 游标分页采集 `systems` 表，标准化 DFT 记录与 SQLite 索引（需要 `CATALYSIS_HUB_API_KEY`）。
 - 2026-09-23：新增 AMCSD（美国矿物学家晶体结构数据库）适配器，支持官方 CIF/AMC/DIF 批量归档采集、将实验矿物晶体结构标准化到 DFT 契约并写入 SQLite 索引。
 - 2026-09-18：新增 NOMAD Archive 适配器，支持原生 API 条目枚举、逐条处理态归档采集、批量 zip 采集、SI 到标准单位换算、标准化 DFT 记录和 SQLite 索引。
 - 2026-09-16：新增 Materials Cloud 适配器，支持 MC3D（PBE/PBEsol）和 MC2D 的 OPTIMADE 分页采集、精选归档批量包下载、标准化 DFT 记录和 SQLite 索引。
@@ -29,22 +33,41 @@ PsiCrawler 是一个用于科研数据采集、标准化、存储和检索的项
 pip install -r requirements.txt
 ```
 
-配置 Materials Project API 密钥：
+配置环境变量：
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-编辑 `.env` 并设置 `MP_API_KEY`，然后下载单个材料：
+编辑 `.env`：
+
+- `MP_API_KEY`：Materials Project 密钥（MP 适配器必需）
+- `HF_ENDPOINT`：Hugging Face 端点；默认地址受限时设为 `https://hf-mirror.com`（MatPES、QMOF）
+- `CATALYSIS_HUB_API_KEY`：Catalysis-Hub 免费密钥（[获取地址](https://api-catalysis-hub.slac.stanford.edu/auth/login)）
+
+Materials Project 单条与批量：
 
 ```powershell
 python -m crawler.dft.mp.run_single mp-149
+python -m crawler.dft.mp.run_batch --mp-ids mp-149,mp-13,mp-22526 --sleep 1
 ```
 
-批量下载：
+其余 DFT 源（单条）：
 
 ```powershell
-python -m crawler.dft.mp.run_batch --mp-ids mp-149,mp-13,mp-22526 --sleep 1
+python -m crawler.dft.twodmatpedia.run_single 2dm-1
+python -m crawler.dft.matpes.run_single matpes-20240214_999485_2 --max-scan 1000
+python -m crawler.dft.qmof.run_single qmof-8a95c27
+python -m crawler.dft.catalysishub.run_single 68351
+```
+
+先跑限量样例（推荐）：
+
+```powershell
+python -m tests.dft.twodmatpedia.extract_batch --max-records 5
+python -m tests.dft.matpes.extract_batch --max-records 5
+python -m tests.dft.qmof.extract_batch --max-records 5
+python -m tests.dft.catalysishub.extract_batch --max-records 5
 ```
 
 ## 📚 数据源
@@ -124,6 +147,38 @@ OQMD 提供无机化合物的计算材料性质，重点包括形成能、相稳
 官方网站：[oqmd.org](https://oqmd.org/)
 
 本地数据源说明：[OQMD](./document/dft/oqmd.md)
+
+#### 2DMatPedia
+
+2DMatPedia 是由新加坡国立大学先进二维材料中心构建的开放二维材料计算数据库，包含自上而下剥离与自下而上化学取代得到的结构与性质。
+
+官方网站：[2dmatpedia.org](https://www.2dmatpedia.org/)
+
+本地数据源说明：[2DMatPedia](./document/dft/twodmatpedia.md)
+
+#### MatPES
+
+MatPES（Materials Potential Energy Surface）由 Materialyze.AI 与 Materials Project 构建，提供覆盖周期表的 PBE 与 r2SCAN 静态 DFT 势能面数据，用于训练基础原子间势。
+
+官方网站：[matpes.ai](https://matpes.ai/)
+
+本地数据源说明：[MatPES](./document/dft/matpes.md)
+
+#### QMOF
+
+QMOF（Quantum MOF Database）是金属有机框架与配位聚合物的量子化学性质数据库，包含周期性 DFT（PBE-D3BJ）结构、能量与带隙，以及 HSE06、HLE17 带隙。
+
+官方网站：[github.com/Andrew-S-Rosen/QMOF](https://github.com/Andrew-S-Rosen/QMOF)
+
+本地数据源说明：[QMOF](./document/dft/qmof.md)
+
+#### Catalysis-Hub
+
+Catalysis-Hub 是由 SUNCAT 中心维护的开放表面反应数据库，后端为 ASE 数据库，`systems` 表保存 slab 与吸附物的结构、总能量和内嵌 CIF。适配器通过 GraphQL 游标分页采集（需要免费 API key）。
+
+官方网站：[catalysis-hub.org](https://www.catalysis-hub.org/)
+
+本地数据源说明：[Catalysis-Hub](./document/dft/catalysishub.md)
 
 ---
 

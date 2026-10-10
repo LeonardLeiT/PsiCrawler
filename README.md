@@ -11,6 +11,10 @@ PsiCrawler is a research data crawling, normalization, storage, and retrieval pr
 
 ## 🔥 Latest Updates
 
+- 2026-10-09 Added a 2DMatPedia (two-dimensional materials) adapter with single JSON Lines bulk ingestion, normalized DFT records, and SQLite indexing.
+- 2026-10-09 Added a MatPES (potential energy surface) adapter with streamed PBE/r2SCAN JSON Lines ingestion from Hugging Face (mirror via `HF_ENDPOINT`), normalized DFT records, and SQLite indexing.
+- 2026-10-09 Added a QMOF (Quantum MOF Database) adapter that joins the property table with the relaxed-structure archive, normalized DFT records, and SQLite indexing.
+- 2026-10-09 Added a Catalysis-Hub adapter with GraphQL cursor paging over the `systems` table (requires `CATALYSIS_HUB_API_KEY`), normalized DFT records, and SQLite indexing.
 - 2026-09-23 Added an AMCSD (American Mineralogist Crystal Structure Database) adapter with official bulk CIF/AMC/DIF archive ingestion, experimental mineral crystal structures normalized into the DFT contract, and SQLite indexing.
 - 2026-09-18 Added a NOMAD Archive adapter with native API entry enumeration, per-entry processed archive ingestion, bulk zip ingestion, SI-to-standard unit conversion, normalized DFT records, and SQLite indexing.
 - 2026-09-16 Added a Materials Cloud adapter with OPTIMADE paging for MC3D (PBE/PBEsol) and MC2D, curated archive bulk downloads, normalized DFT records, and SQLite indexing.
@@ -29,22 +33,41 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
-Configure the Materials Project API key:
+Configure the environment:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Edit `.env` and set `MP_API_KEY`, then run a single-material download:
+Edit `.env`:
+
+- `MP_API_KEY`: Materials Project key (required by the MP adapter)
+- `HF_ENDPOINT`: Hugging Face endpoint; set to `https://hf-mirror.com` when the default host is unreachable (MatPES, QMOF)
+- `CATALYSIS_HUB_API_KEY`: free Catalysis-Hub key ([obtain one here](https://api-catalysis-hub.slac.stanford.edu/auth/login))
+
+Materials Project single and batch:
 
 ```powershell
 python -m crawler.dft.mp.run_single mp-149
+python -m crawler.dft.mp.run_batch --mp-ids mp-149,mp-13,mp-22526 --sleep 1
 ```
 
-Run a batch download:
+Other DFT sources (single):
 
 ```powershell
-python -m crawler.dft.mp.run_batch --mp-ids mp-149,mp-13,mp-22526 --sleep 1
+python -m crawler.dft.twodmatpedia.run_single 2dm-1
+python -m crawler.dft.matpes.run_single matpes-20240214_999485_2 --max-scan 1000
+python -m crawler.dft.qmof.run_single qmof-8a95c27
+python -m crawler.dft.catalysishub.run_single 68351
+```
+
+Limited-sample runs first (recommended):
+
+```powershell
+python -m tests.dft.twodmatpedia.extract_batch --max-records 5
+python -m tests.dft.matpes.extract_batch --max-records 5
+python -m tests.dft.qmof.extract_batch --max-records 5
+python -m tests.dft.catalysishub.extract_batch --max-records 5
 ```
 
 ## 📚 Data Sources
@@ -124,6 +147,38 @@ OQMD provides computed materials properties for inorganic compounds, with a focu
 Official website: [oqmd.org](https://oqmd.org/)
 
 Local Source: [OQMD](./document/dft/oqmd.md)
+
+#### 2DMatPedia
+
+2DMatPedia is an open computational database of two-dimensional materials from top-down exfoliation and bottom-up chemical substitution, produced by the Centre for Advanced 2D Materials (National University of Singapore).
+
+Official website: [2dmatpedia.org](https://www.2dmatpedia.org/)
+
+Local Source: [2DMatPedia](./document/dft/twodmatpedia.md)
+
+#### MatPES
+
+MatPES (Materials Potential Energy Surface) is an open potential-energy-surface dataset from Materialyze.AI and the Materials Project, computed with PBE and r2SCAN and designed to train foundation interatomic potentials.
+
+Official website: [matpes.ai](https://matpes.ai/)
+
+Local Source: [MatPES](./document/dft/matpes.md)
+
+#### QMOF
+
+The Quantum MOF (QMOF) Database provides quantum-chemical properties for 20,000+ metal-organic frameworks from high-throughput periodic DFT, including PBE, HSE06, and HLE17 band gaps.
+
+Official website: [github.com/Andrew-S-Rosen/QMOF](https://github.com/Andrew-S-Rosen/QMOF)
+
+Local Source: [QMOF](./document/dft/qmof.md)
+
+#### Catalysis-Hub
+
+Catalysis-Hub is an open surface-reaction database maintained by the SUNCAT Center, backed by an ASE database whose `systems` table holds slab and adsorbate structures, total energies, and embedded CIFs. The adapter pages it through GraphQL (a free API key is required).
+
+Official website: [catalysis-hub.org](https://www.catalysis-hub.org/)
+
+Local Source: [Catalysis-Hub](./document/dft/catalysishub.md)
 
 ---
 
