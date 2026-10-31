@@ -17,6 +17,7 @@ conditions differ.
 - [MatPES](./matpes.md) · PBE and r2SCAN potential-energy-surface calculations (Hugging Face JSON Lines)
 - [QMOF](./qmof.md) · DFT properties for metal-organic frameworks (property table + relaxed CIFs)
 - [Catalysis-Hub](./catalysishub.md) · DFT surface systems via GraphQL (API key)
+- [OMat24](./omat24.md) · Meta Open Materials 2024 PBE/PBE+U potential-energy-surface data (ASE LMDB)
 
 ## Standard contract
 
@@ -33,6 +34,7 @@ Every database maps its own raw documents into that contract:
 - MatPES: [`normalizers/dft/matpes/`](../../normalizers/dft/matpes)
 - QMOF: [`normalizers/dft/qmof/`](../../normalizers/dft/qmof)
 - Catalysis-Hub: [`normalizers/dft/catalysishub/`](../../normalizers/dft/catalysishub)
+- OMat24: [`normalizers/dft/omat24/`](../../normalizers/dft/omat24)
 
 There is no shared normalization engine: only `standard.yaml` is common to all
 databases, while each source keeps its own `mapping.yaml` and `normalize.py`.

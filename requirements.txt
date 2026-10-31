@@ -7,6 +7,11 @@ pymatgen>=2026.5
 emmet-core>=0.87
 monty>=2024.2
 
+# OMat24 ASE LMDB datasets (ase-db-backends provides the aselmdb backend)
+ase>=3.26
+lmdb>=1.4
+ase-db-backends>=0.10
+
 # YAML standard contracts and source mappings
 PyYAML>=6.0
 

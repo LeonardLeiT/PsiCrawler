@@ -11,6 +11,7 @@ PsiCrawler is a research data crawling, normalization, storage, and retrieval pr
 
 ## 🔥 Latest Updates
 
+- 2026-10-31 Added an OMat24 (Meta Open Materials 2024) adapter with per-subdataset archive download/extraction, ASE LMDB streaming, normalized DFT records, and SQLite indexing (adds `ase`, `lmdb`, `ase-db-backends`).
 - 2026-10-09 Added a 2DMatPedia (two-dimensional materials) adapter with single JSON Lines bulk ingestion, normalized DFT records, and SQLite indexing.
 - 2026-10-09 Added a MatPES (potential energy surface) adapter with streamed PBE/r2SCAN JSON Lines ingestion from Hugging Face (mirror via `HF_ENDPOINT`), normalized DFT records, and SQLite indexing.
 - 2026-10-09 Added a QMOF (Quantum MOF Database) adapter that joins the property table with the relaxed-structure archive, normalized DFT records, and SQLite indexing.
@@ -59,6 +60,7 @@ python -m crawler.dft.twodmatpedia.run_single 2dm-1
 python -m crawler.dft.matpes.run_single matpes-20240214_999485_2 --max-scan 1000
 python -m crawler.dft.qmof.run_single qmof-8a95c27
 python -m crawler.dft.catalysishub.run_single 68351
+python -m crawler.dft.omat24.run_single <sid_or_row_id> --subset val-rattled-1000-subsampled
 ```
 
 Limited-sample runs first (recommended):
@@ -179,6 +181,16 @@ Catalysis-Hub is an open surface-reaction database maintained by the SUNCAT Cent
 Official website: [catalysis-hub.org](https://www.catalysis-hub.org/)
 
 Local Source: [Catalysis-Hub](./document/dft/catalysishub.md)
+
+#### OMat24
+
+<img src="./Figure/omat_logo.png" alt="logo" style="height:10em;">
+
+OMat24 (Open Materials 2024) is Meta FAIR's open inorganic materials dataset of PBE/PBE+U potential-energy-surface calculations, providing structures, total energies, forces, and stresses for training foundation interatomic potentials. The adapter downloads one subdataset at a time and reads its ASE LMDB database.
+
+Official dataset: [huggingface.co/datasets/facebook/OMAT24](https://huggingface.co/datasets/facebook/OMAT24)
+
+Local Source: [OMat24](./document/dft/omat24.md)
 
 ---
 

@@ -11,6 +11,7 @@ PsiCrawler 是一个用于科研数据采集、标准化、存储和检索的项
 
 ## 🔥 最新进展
 
+- 2026-10-31：新增 OMat24（Meta Open Materials 2024）适配器，支持按子集下载/解压归档、ASE LMDB 流式读取、标准化 DFT 记录与 SQLite 索引（新增 `ase`、`lmdb`、`ase-db-backends` 依赖）。
 - 2026-10-09：新增 2DMatPedia（二维材料）适配器，整库 JSON Lines 流式采集、标准化 DFT 记录与 SQLite 索引。
 - 2026-10-09：新增 MatPES（势能面数据集）适配器，支持 PBE/r2SCAN 两种泛函的 Hugging Face JSON Lines 流式采集（可用 `HF_ENDPOINT` 指向镜像），标准化 DFT 记录与 SQLite 索引。
 - 2026-10-09：新增 QMOF（金属有机框架量子化学数据库）适配器，采集属性表与弛豫结构归档并逐条关联 CIF，标准化 DFT 记录与 SQLite 索引。
@@ -59,6 +60,7 @@ python -m crawler.dft.twodmatpedia.run_single 2dm-1
 python -m crawler.dft.matpes.run_single matpes-20240214_999485_2 --max-scan 1000
 python -m crawler.dft.qmof.run_single qmof-8a95c27
 python -m crawler.dft.catalysishub.run_single 68351
+python -m crawler.dft.omat24.run_single <sid_or_row_id> --subset val-rattled-1000-subsampled
 ```
 
 先跑限量样例（推荐）：
@@ -179,6 +181,14 @@ Catalysis-Hub 是由 SUNCAT 中心维护的开放表面反应数据库，后端�
 官方网站：[catalysis-hub.org](https://www.catalysis-hub.org/)
 
 本地数据源说明：[Catalysis-Hub](./document/dft/catalysishub.md)
+
+#### OMat24
+
+OMat24（Open Materials 2024）是 Meta FAIR 发布的开放无机材料势能面数据集，提供 PBE/PBE+U 的结构、总能量、力与应力，用于训练基础原子间势。适配器按子集下载归档并读取其 ASE LMDB 数据库。
+
+官方数据集：[huggingface.co/datasets/facebook/OMAT24](https://huggingface.co/datasets/facebook/OMAT24)
+
+本地数据源说明：[OMat24](./document/dft/omat24.md)
 
 ---
 
